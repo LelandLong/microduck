@@ -1,0 +1,130 @@
+# Leland's notes — Microduck (crossfeed seat: DUCK)
+
+> **This file is committed** on the `leland` branch of Leland's **public** fork
+> `LelandLong/microduck`, so it travels to Claude Cloud sessions. Anyone can read it: never put
+> credentials, tokens or private contact details here. Pollen's `CLAUDE.md` / `AGENTS.md` are
+> upstream: read and follow them, but never edit them for anything of Leland's (it would conflict
+> with every upstream merge). `.claude/` (crossfeed hooks + skill) stays local-only via
+> `.git/info/exclude`.
+
+## What this is
+- `~/microduck` is a fork of **`pollen-robotics/microduck`** (Apache-2.0), the software for
+  Pollen Robotics' Microduck biped. Cloned 2026-10-30, forked to `LelandLong/microduck` the same day.
+- Leland has **pre-purchased a Microduck; delivery is 4–6 months out.** Until it arrives, this seat
+  exists to help him **explore, learn and try things in the simulator** (`scripts/duck-sim`,
+  `docs/robot/simulation.md`) so he is ready on day one.
+- The training side (MuJoCo + PPO, the policies the duck runs) is a separate repo,
+  `pollen-robotics/microduck_rl`. It is **not cloned yet**; clone it beside this one if he wants it.
+
+## Git layout (set up 2026-10-30)
+- `origin` = `LelandLong/microduck` (his public fork). `upstream` = `pollen-robotics/microduck`.
+- **`leland`** = his working branch and the fork's default branch: upstream code + `CLAUDE.local.md`
+  + `leland/` (notes, session logs, video list). **`main`** stays a clean mirror of upstream, so a
+  fix for Pollen can branch from it later.
+- Sync with Pollen: `git fetch upstream && git checkout main && git merge --ff-only upstream/main &&
+  git push origin main && git checkout leland && git merge main && git push origin leland`.
+- Commits in this repo use his GitHub no-reply email (repo-local `user.email`), so his personal
+  address never appears in the public history.
+
+## Keeping everything in the repo (Leland's standing request, 2026-10-30)
+- Leland wants **everything we discuss** in this repo so it is reachable from Claude Cloud.
+- Durable facts and decisions go in this file. Longer material goes in `leland/`: one session log per
+  day in `leland/sessions/YYYY-MM-DD.md`, reference material in `leland/` (see `leland/README.md`).
+- At the end of each substantive turn: update the notes, **commit on `leland` and push to `origin`**
+  (standing authorisation from Leland). Public repo: scrub anything private before committing.
+
+## Session start
+1. This file, then the upstream `CLAUDE.md`, then the newest `leland/sessions/` log.
+2. **On the laptop only:** run the crossfeed skill (seat **DUCK**, personal group); credentials
+   `~/crossfeed/access/crossfeed-DUCK.env`, named inline. **In a Claude Cloud session** there is no
+   `~/crossfeed`, no hooks and no skill: skip crossfeed entirely.
+3. Now and then, sync with Pollen (command above): upstream moves daily.
+4. (History: XFD-069, the setup handover, was read and marked 2026-10-30; its durable parts are below.)
+
+## Working with Leland (house rules from his other projects)
+- Plain English, no jargon. Short bullets first, detail after, and **every substantive reply ends
+  with a summary**.
+- He's an experienced Swift/iOS developer and knows Apple tooling well. Rust, robotics and
+  reinforcement learning are new to him here, so teach those properly without talking down.
+- Verify, don't recall: time comes from `date`, and nothing is called working until it has been run.
+- **Never install system-wide software (Homebrew packages, Rust toolchains, Python environments)
+  without telling him first** what it is and roughly how big it is.
+
+## Handover from XFD-069 (copied 2026-10-30)
+
+### The Mac (measured by XFD 2026-10-30, re-check before relying on it)
+- Apple Silicon (arm64), macOS 26.6.2, 32 GB RAM, Homebrew 7.0.11, Python 3.11.3.
+- **Missing:** Rust (`rustup`/`cargo`), `uv`, Docker, GStreamer, git-lfs.
+- **Disk:** ~28.9 GB truly free; Finder says 61.6 GB (the rest is purgeable cloud copies/caches).
+  Treat ~29 GB as the safe budget, 61.6 GB as the ceiling. Install one thing at a time.
+
+### Local simulator notes (from `docs/robot/simulation.md`; read it yourself)
+- `scripts/duck-sim` runs the real daemons against a MuJoCo body. Commands: `duck-sim`, `status`,
+  `drive`, `ctl <robotctl args>`, `monitor`, `log`, `down`.
+- Needs this repo built with cargo plus a `microduck_rl` checkout with its venv (default
+  `~/Pollen/microduck_rl`, override `DUCK_SIM_RL`). Camera needs `brew install gstreamer
+  libnice-gstreamer` and microduck_rl's `develop` branch.
+- `duck-sim boot N` (multi-duck) needs `systemd-nspawn`/`mmdebstrap`: probably Linux-only (unverified).
+- **Unverified, check first:** microduck_rl says training needs CUDA; whether its venv installs on a
+  Mac just to run `duck-body` (CPU MuJoCo) is untested.
+
+### Options offered to Leland, easiest first (none picked as of 2026-10-30)
+1. Browser simulator, zero install: https://huggingface.co/spaces/pollen-robotics/microduck-simulator
+2. Policy Playground (https://huggingface.co/spaces/pollen-robotics/microduck-policy-playground) and
+   Arena leaderboard (https://huggingface.co/spaces/pollen-robotics/microduck-arena).
+3. Full local simulator (`scripts/duck-sim`): Rust + microduck_rl + disk.
+4. Train his own tricks: official needs CUDA; alternatives are `--hf-jobs` (paid) or community
+   https://github.com/jonathanhawkins/microduck-lab (claims Mac training, unverified).
+5. Build an app: SwiftUI iPhone app over Bluetooth (`btd`/`duckctl`) or WebRTC (`docs/faq.md`, `spaces/`).
+6. Build a replica now: e.g. https://github.com/fanhao375/microduck-replica,
+   https://github.com/LuwuDynamics/xgoduck_hardware.
+- TypeSafe/Jev (raise when it fits): fits "what should the duck do next" decisions; NOT walking/balance.
+
+**Open decisions:** browser vs. local sim first; whether to clone microduck_rl; which of 1–6.
+
+### Reading map
+`README.md`, `docs/README.md`, `docs/faq.md`, `docs/robot/simulation.md`, `docs/robot/cheatsheet.md`,
+`docs/design/architecture.md`, `docs/project/roadmap.md`, and https://github.com/joeynyc/awesome-microduck
+(says first units before Christmas 2026; official policies at `pollen-robotics/microduck-policies`).
+
+### Seat gotcha
+- (Laptop only) set the crossfeed resting status with `~/crossfeed/set-status.sh` **before** writing the final reply.
+
+### HF Jobs cost for `microduck_rl --hf-jobs` (researched 2026-10-30)
+- microduck_rl `scripts/hf/README.md`: default `--flavor l4x1`, also `a10g-large` / `a100-large`;
+  default `--timeout 12h`. Also uploads source + checkpoints to private HF repos, a uv-cache bucket,
+  and forwards wandb (optional, `--no-wandb`). `--dry-run` prints the job without submitting.
+- HF price list (docs/hub/jobs-pricing): L4 $0.80/h, A10G-large $1.50/h, A100 $2.50/h; billed per
+  minute; needs a **positive prepaid credit balance**. Default 12 h timeout caps one L4 run at $9.60.
+- Not yet known: how fast an L4 trains the duck vs. the README's "1–2 h for a usable gait".
+
+### Leland's gaming PC (from his System Information screenshots, 2026-10-30)
+- ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
+  **NVIDIA RTX 3060** (VRAM not shown; desktop 3060 is usually 12 GB, confirm with `nvidia-smi`),
+  driver 32.0.15.9636 = NVIDIA 596.36.
+- He mainly games on it. Wants the **Mac as home base** and the PC as an optimized training step,
+  not a daily workstation.
+- mjlab (microduck_rl's engine) officially: training **Linux only**, WSL listed for evaluation only;
+  needs Turing+ GPU and driver ≥ 580 (3060 + 596 both qualify). WSL2 training: officially unlisted, but
+  Kevin Wood trains Microduck in WSL2 on Windows in his video (see below), so expected to work.
+
+### YouTube learning list given to Leland (2026-10-30; titles/channels checked, videos not watched)
+- Best channels found: **Pollen Robotics** (official), **Remi Fabre** (Microduck RL/expressive clips),
+  **Kevin Wood | Robotics & AI** (Microduck mjlab training on Windows/Linux: ZDvCdIFXANw),
+  **DigiKey + Shawn Hymel** 6-part "Reinforcement Learning for Robotics" (MuJoCo + PPO + sim-to-real),
+  sentdex G1 walking (FGnAeUXRZ4E).
+- Avoid: Lifey Guy, OTOFOOTAGE, Code-Dixa and similar churn channels.
+- Leland's plan as of 2026-10-30: not installing on the PC yet, "soon".
+
+### Kevin Wood's Microduck training video (ZDvCdIFXANw), from the transcript Leland pasted 2026-10-30
+- **Native Windows fails** (`uv run train` → "selected GPUs index out of range"). **WSL2 + Ubuntu works**:
+  he trained on Windows via WSL. This answers our "WSL2 unverified" question (for his GPU, not yet ours).
+- Steps: `wsl --install` (PowerShell) → in WSL `git clone` microduck_rl → `uv run train Mjlab-Velocity-Flat-MicroDuck ...`.
+- First run asks about Weights & Biases; option **3** = don't visualise (no account needed).
+- Default run is **50,000 iterations** (written `50_000` in code; override with `--agent.max_iterations`).
+  ~**3.8 s/iteration** on his (unnamed) GPU → full run ≈ 53 h. Nobody needs the full run:
+  **walking already at 750 iterations (~48 min)**, clearly better at 4,000 (~4 h).
+- Checkpoints saved every 250 iterations in `logs/rsl_rl/<task>/<date>/model_N.pt`; watch one mid-training:
+  `uv run play <task> --checkpoint-file logs/rsl_rl/.../model_750.pt`.
+- Sim-to-real lesson: the motors are modelled by **BAM** (Better Actuator Models, system identification of the
+  Dynamixel servos); friction is the usual difference between a good and a bad policy.
