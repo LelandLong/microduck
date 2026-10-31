@@ -129,7 +129,7 @@
 - Sim-to-real lesson: the motors are modelled by **BAM** (Better Actuator Models, system identification of the
   Dynamixel servos); friction is the usual difference between a good and a bad policy.
 
-## Decisions 2026-10-31
+## Notes 2026-10-31
 - Leland edits video with **ScreenFlow** on the Mac (training-progress videos for family/YouTube).
-- `microduck_rl` stays a **separate repo** (fork `LelandLong/microduck_rl`, clone to
+- Recommended (awaiting his OK): `microduck_rl` as a **separate repo** (fork `LelandLong/microduck_rl`, clone to
   `~/Pollen/microduck_rl`); Leland's notes for both live here in `leland/`.
