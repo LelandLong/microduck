@@ -23,6 +23,8 @@
   fix for Pollen can branch from it later.
 - Sync with Pollen: `git fetch upstream && git checkout main && git merge --ff-only upstream/main &&
   git push origin main && git checkout leland && git merge main && git push origin leland`.
+- This Mac's git is 2.15 (2017): pushes with media failed ("remote end hung up") until
+  `git config http.postBuffer 157286400` (set repo-local 2026-11-03). No `git switch`; use `checkout`.
 - Commits in this repo use his GitHub no-reply email (repo-local `user.email`), so his personal
   address never appears in the public history.
 
