@@ -65,8 +65,9 @@
   `~/Pollen/microduck_rl`, override `DUCK_SIM_RL`). Camera needs `brew install gstreamer
   libnice-gstreamer` and microduck_rl's `develop` branch.
 - `duck-sim boot N` (multi-duck) needs `systemd-nspawn`/`mmdebstrap`: probably Linux-only (unverified).
-- **Unverified, check first:** microduck_rl says training needs CUDA; whether its venv installs on a
-  Mac just to run `duck-body` (CPU MuJoCo) is untested.
+- microduck_rl says training needs CUDA, but its venv should install on the Mac for `duck-body` (CPU
+  MuJoCo): checked 2026-11-03 against its `uv.lock`, every package has a macOS arm64 build except
+  Linux-only NVIDIA/CUDA packages (skipped on Mac) and BAM (installed from git). Not yet run.
 
 ### Options offered to Leland, easiest first (none picked as of 2026-10-30)
 1. Browser simulator, zero install: https://huggingface.co/spaces/pollen-robotics/microduck-simulator
@@ -128,3 +129,12 @@
   `uv run play <task> --checkpoint-file logs/rsl_rl/.../model_750.pt`.
 - Sim-to-real lesson: the motors are modelled by **BAM** (Better Actuator Models, system identification of the
   Dynamixel servos); friction is the usual difference between a good and a bad policy.
+
+### Disk budget for a full Mac setup (measured/estimated 2026-11-03)
+- Free: **36.5 GB** (`diskutil`), up from 28.9 GB at handover. Already present: Homebrew (2.2 GB cellar), Node.
+- Core local simulator ≈ **8–10 GB**: Rust toolchain ~1.5 GB (est.); this repo's build (595 crates,
+  debug `target/`) ~4–6 GB (est., grows; `cargo clean` reclaims); uv + Python 3.12 ~0.1 GB;
+  microduck_rl repo + venv ~1.5–2 GB (**measured: 0.34 GB of Mac downloads**, ~3–4x unpacked).
+- Optional: camera = GStreamer + libnice-gstreamer, **58 new Homebrew packages** (incl. GTK 3/4, a
+  second Python) ~1.5–2.5 GB (est.); microduck-lab ~3 GB (its README).
+- Everything ≈ **13–16 GB**, leaving ~20 GB. Not needed on the Mac: Docker, CUDA, git-lfs, multi-duck `boot`.
