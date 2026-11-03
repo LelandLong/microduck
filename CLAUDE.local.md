@@ -49,7 +49,11 @@
   (Studio 2.2x laptop). Gaming PC connected (`ssh pc`, key only, passwords off). See `leland/MACHINES.md`.
 - **Done 17:45: PC has WSL 3.0.3 + Ubuntu 24.04 + `~/microduck_rl`; GPU training test ran, 3.66 s/iteration**
   (750 it ≈ 46 min, 4,000 ≈ 4 h). Details in `leland/MACHINES.md`. **Next:** Wake-on-LAN (needs BIOS +
-  adapter settings, MAC `50:eb:f6:ca:72:a1`) + auto-shutdown after runs; offer Leland a first real run.
+  adapter settings, MAC `50:eb:f6:ca:72:a1`) + auto-shutdown after runs; **First real run started 17:46: 750 it, `--agent.run-name first-750`,
+  script `~/run-first-750.sh` (status `~/first-750.status`, log `~/first-750.log`), shuts the PC down 10 min after.**
+  Resume later with `--agent.resume True --agent.load-run <run dir> --agent.load-checkpoint model_749.pt`
+  (mjlab `rl/config.py`). Quoting tip: pipe scripts in with `ssh pc 'wsl -d Ubuntu-24.04 -- bash -s' <<'EOF'`;
+  inline `|` and `"` get mangled by Windows' cmd.
   GPU power cap optional. No ZeroTier, no remote-control apps on the PC.
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
