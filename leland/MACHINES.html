@@ -215,6 +215,19 @@ wrong ones. That was the &quot;Too many authentication failures&quot; error.</p>
 </code></pre>
 <p>It installs Windows&#39; own OpenSSH server, limits it to the home network, trusts only my laptop&#39;s key
 (fetched from <code>github.com/LelandLong.keys</code>) and turns password logins off.</p>
+<p><strong>✅ Working 2026-11-03 17:20: <code>ssh pc</code> logs in with no password.</strong> What it took:</p>
+<ul>
+<li>The install step (<code>Add-WindowsCapability</code>) took 10+ minutes. That&#39;s normal.</li>
+<li><strong>Windows had the home Ethernet marked &quot;Public&quot;</strong>, and the SSH rule only applies on Private networks, so the
+laptop was silently ignored. Fixed with <code>Set-NetConnectionProfile -InterfaceAlias Ethernet -NetworkCategory Private</code>
+(now in the script). <a href="pc/check-ssh.ps1"><code>pc/check-ssh.ps1</code></a> is the read-only check that found it.</li>
+<li>Password logins had a second route (&quot;keyboard-interactive&quot;), now off too: <strong>the PC accepts only the
+laptop&#39;s key</strong> (tested: <code>Permission denied (publickey)</code>).</li>
+<li>The PC&#39;s identity: ED25519 <code>SHA256:0lr/TGeCz2N7FjVixAcABnK0qqxkicdl/FURJWu4P9M</code>. It runs OpenSSH 9.5 (Windows&#39; own),
+so the laptop warns about &quot;post-quantum key exchange&quot;. That&#39;s harmless on a home network.</li>
+<li>Measured: RTX 3060 <strong>12,288 MB</strong>, driver 596.49, power limit 170 W, idle 32 °C; C: 152 GB free.
+<strong>WSL not installed yet.</strong></li>
+</ul>
 <p><strong>How it will work:</strong></p>
 <ul>
 <li><strong>Switched on from the laptop</strong> (Wake-on-LAN, over the wired home network). Needs two settings checked on

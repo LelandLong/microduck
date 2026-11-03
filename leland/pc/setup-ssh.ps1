@@ -27,7 +27,9 @@ Set-Content -Path "$env:USERPROFILE\.ssh\authorized_keys" -Value $key -Encoding 
 
 Write-Host "4/4  Keys only: switching password logins off..."
 $cfg = "$env:ProgramData\ssh\sshd_config"
-(Get-Content $cfg) -replace '^#?\s*PasswordAuthentication\s.*', 'PasswordAuthentication no' | Set-Content $cfg
+# Both password routes: "password" and "keyboard-interactive" (which on Windows also asks for the password).
+$c = (Get-Content $cfg) -replace '^#?\s*PasswordAuthentication\s.*', 'PasswordAuthentication no' -replace '^#?\s*KbdInteractiveAuthentication\s.*', ''
+Set-Content $cfg (@('KbdInteractiveAuthentication no') + $c)
 Restart-Service sshd
 
 Write-Host ""

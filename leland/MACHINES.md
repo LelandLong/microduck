@@ -111,6 +111,18 @@ irm https://raw.githubusercontent.com/LelandLong/microduck/leland/leland/pc/setu
 It installs Windows' own OpenSSH server, limits it to the home network, trusts only my laptop's key
 (fetched from `github.com/LelandLong.keys`) and turns password logins off.
 
+**✅ Working 2026-11-03 17:20: `ssh pc` logs in with no password.** What it took:
+- The install step (`Add-WindowsCapability`) took 10+ minutes. That's normal.
+- **Windows had the home Ethernet marked "Public"**, and the SSH rule only applies on Private networks, so the
+  laptop was silently ignored. Fixed with `Set-NetConnectionProfile -InterfaceAlias Ethernet -NetworkCategory Private`
+  (now in the script). [`pc/check-ssh.ps1`](pc/check-ssh.ps1) is the read-only check that found it.
+- Password logins had a second route ("keyboard-interactive"), now off too: **the PC accepts only the
+  laptop's key** (tested: `Permission denied (publickey)`).
+- The PC's identity: ED25519 `SHA256:0lr/TGeCz2N7FjVixAcABnK0qqxkicdl/FURJWu4P9M`. It runs OpenSSH 9.5 (Windows' own),
+  so the laptop warns about "post-quantum key exchange". That's harmless on a home network.
+- Measured: RTX 3060 **12,288 MB**, driver 596.49, power limit 170 W, idle 32 °C; C: 152 GB free.
+  **WSL not installed yet.**
+
 **How it will work:**
 - **Switched on from the laptop** (Wake-on-LAN, over the wired home network). Needs two settings checked on
   the PC: one in the BIOS, one on the network adapter.
