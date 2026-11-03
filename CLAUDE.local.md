@@ -55,8 +55,11 @@
 ### The Mac (measured by XFD 2026-10-30, re-check before relying on it)
 - Apple Silicon (arm64), macOS 26.6.2, 32 GB RAM, Homebrew 7.0.11, Python 3.11.3.
 - **Missing:** Rust (`rustup`/`cargo`), `uv`, Docker, GStreamer, git-lfs.
-- **Disk:** ~28.9 GB truly free; Finder says 61.6 GB (the rest is purgeable cloud copies/caches).
-  Treat ~29 GB as the safe budget, 61.6 GB as the ceiling. Install one thing at a time.
+- **Disk: quote Finder's "available" figure, never plain free space** (Leland, 2026-11-03: he relies on
+  Finder, and the lower number irritated him). Finder's figure = `volumeAvailableCapacityForImportantUsage`
+  (69.41 GB on 2026-11-03, matched his Finder exactly). The ~33 GB gap is purgeable space macOS clears on
+  demand: mostly `~/Library/Caches` (24 GB) and local copies of iCloud/OneDrive/Dropbox files (~9 GB).
+  Measure it with a Swift `URL.resourceValues` check, not `df`.
 
 ### Local simulator notes (from `docs/robot/simulation.md`; read it yourself)
 - `scripts/duck-sim` runs the real daemons against a MuJoCo body. Commands: `duck-sim`, `status`,
@@ -131,10 +134,10 @@
   Dynamixel servos); friction is the usual difference between a good and a bad policy.
 
 ### Disk budget for a full Mac setup (measured/estimated 2026-11-03)
-- Free: **36.5 GB** (`diskutil`), up from 28.9 GB at handover. Already present: Homebrew (2.2 GB cellar), Node.
+- Available (Finder's figure): **69.4 GB**. Already present: Homebrew (2.2 GB cellar), Node.
 - Core local simulator ≈ **8–10 GB**: Rust toolchain ~1.5 GB (est.); this repo's build (595 crates,
   debug `target/`) ~4–6 GB (est., grows; `cargo clean` reclaims); uv + Python 3.12 ~0.1 GB;
   microduck_rl repo + venv ~1.5–2 GB (**measured: 0.34 GB of Mac downloads**, ~3–4x unpacked).
 - Optional: camera = GStreamer + libnice-gstreamer, **58 new Homebrew packages** (incl. GTK 3/4, a
   second Python) ~1.5–2.5 GB (est.); microduck-lab ~3 GB (its README).
-- Everything ≈ **13–16 GB**, leaving ~20 GB. Not needed on the Mac: Docker, CUDA, git-lfs, multi-duck `boot`.
+- Everything ≈ **13–16 GB**, leaving ~53 GB. Not needed on the Mac: Docker, CUDA, git-lfs, multi-duck `boot`.
