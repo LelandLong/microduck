@@ -125,5 +125,27 @@ Two snags: Windows had the home network marked <strong>Public</strong> (fixed: P
 <li><strong>Phone:</strong> Remote Control of the laptop session (<code>/remote-control</code> in VS Code) keeps the whole conversation and
 can reach the Studio and PC. A Claude Cloud session reads these notes but can&#39;t reach my home machines.</li>
 </ul>
+<h2>Round 6: the first real training run, and &quot;why no Mac version?&quot;</h2>
+<ul>
+<li>750 rounds of Pollen&#39;s training on the PC: 43 min 28 s, and <strong>the duck walks</strong> (TRAINING.md section 12).</li>
+<li><strong>Q: why isn&#39;t Pollen&#39;s training rewritten for the Mac?</strong> Not because of Unix. Their speed comes from running
+thousands of ducks on the graphics card, and the physics engine (MuJoCo Warp) is written in NVIDIA&#39;s Warp/CUDA.
+The neural-network part (PyTorch) already runs on Apple&#39;s GPU; the physics is the hard part.</li>
+<li><strong>Q: how hard would a Metal rewrite be?</strong> Not impossible, but a big project. Ways it could go, hardest last:<ol>
+<li><strong>MJX on Apple&#39;s <code>jax-metal</code></strong> (Google&#39;s GPU MuJoCo, built on JAX): exists today, experimental, missing
+pieces. Pollen&#39;s environment (rewards, curriculum, randomisation) would still need re-writing on top.</li>
+<li><strong>A Metal backend for Warp</strong> (Warp is open source and already generates C++/CUDA code): generate Metal code
+instead. Hard parts: the GPU features MuJoCo Warp leans on for speed (CUDA graphs, atomics, tile operations),
+and keeping up as NVIDIA changes Warp. NVIDIA is unlikely to maintain it.</li>
+<li><strong>Hand-port MuJoCo Warp&#39;s kernels to Metal:</strong> tens of thousands of lines, moving every week.</li>
+</ol>
+<ul>
+<li>Rough size: a working prototype for just the Microduck is months of expert GPU work; a maintained port is ongoing
+work forever. On paper the Studio&#39;s GPU is in the same league as the 3060, but that&#39;s unmeasured.</li>
+<li>Practical answer for me: the PC already trains a walker in 46 minutes, so a port would be a hobby or learning
+project, not a need. A small first experiment: try MJX + <code>jax-metal</code> on the Studio.</li>
+</ul>
+</li>
+</ul>
 
 </div></body></html>
