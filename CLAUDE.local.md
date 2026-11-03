@@ -117,6 +117,11 @@
 - ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
   **NVIDIA RTX 3060** (VRAM not shown; desktop 3060 is usually 12 GB, confirm with `nvidia-smi`),
   driver 32.0.15.9636 = NVIDIA 596.36.
+- **PC plan Leland likes (2026-11-03):** Claude wakes it from the laptop (Wake-on-LAN; check BIOS +
+  network-adapter setting, it's wired) and every training run **shuts it down at the end**. Worries: being
+  used as a bot while unattended, fan noise, heat in his office. Reassurance plan: no router port forwards,
+  SSH key-only from the home subnet via Windows Firewall, no ZeroTier on it, no remote-control apps,
+  Defender + updates on, optional AT&T per-device internet block, optional GPU power cap (~170 → 120 W).
 - He mainly games on it. Wants the **Mac as home base** and the PC as an optimized training step,
   not a daily workstation.
 - mjlab (microduck_rl's engine) officially: training **Linux only**, WSL listed for evaluation only;
@@ -193,6 +198,18 @@
   network on). Has Xcode + git 2.50; **no Homebrew, uv, Rust or Node**. Leland: admin, in Keller IT, may
   install anything. At first login it was busy (load ~20–32): Spotlight indexing + preparing a macOS
   27.2 update; **don't benchmark while that's running**.
+- **Studio fully installed 2026-11-03 (same as the laptop, Leland: "when I switch to studio I don't want
+  to be limited")**: Homebrew (Leland ran the installer with his password via `ssh -t studio`; Claude can't
+  sudo), uv 0.13.7, Node 26, gh, GStreamer 1.28.8 + libnice-gstreamer, Rust 1.99.1 (stable, 1.3 GB),
+  `~/microduck` (fork, `leland` branch, `upstream` remote; daemons built in **32 s** vs laptop 51 s),
+  `~/Pollen/microduck_rl` (develop `bae39f59`, .venv 1.1 GB), `~/microduck-lab` (`8dad921`, 1.8 GB,
+  setup "Ready"), uv cache 1.6 GB, Homebrew cellar 1.4 GB. **Simulator verified: stands, loop 49.9/50 Hz,
+  `drive 0.4 0` walked 1.31 m** (measured via port 7801).
+- **Showing things on the Studio's screens:** `ssh studio 'osascript -e "tell application \"Terminal\" to
+  do script \"…\""'` opens a Terminal window in Leland's logged-in desktop (he granted the Automation
+  permission 2026-11-03). Run duck-sim, training and long jobs that way so he can watch upstairs.
+  `duck-sim status` straight after launch can say "did not stand up": it's still starting, re-check.
+- Not yet on the Studio: VS Code + Claude Code, crossfeed (asked, unanswered).
 - Steps Leland must do at the Studio once: Sharing → **Remote Login** on (and **Screen Sharing** on);
   note the "Local hostname"; Energy → prevent sleep when display off + wake for network access.
   Then from the laptop: `ssh-copy-id <user>@<hostname>.local` (he types the Studio password once)

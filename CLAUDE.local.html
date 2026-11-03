@@ -161,6 +161,11 @@ minute; needs a <strong>positive prepaid credit balance</strong>. Default 12 h t
 <li>ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
 <strong>NVIDIA RTX 3060</strong> (VRAM not shown; desktop 3060 is usually 12 GB, confirm with <code>nvidia-smi</code>),
 driver 32.0.15.9636 = NVIDIA 596.36.</li>
+<li><strong>PC plan Leland likes (2026-11-03):</strong> Claude wakes it from the laptop (Wake-on-LAN; check BIOS +
+network-adapter setting, it&#39;s wired) and every training run <strong>shuts it down at the end</strong>. Worries: being
+used as a bot while unattended, fan noise, heat in his office. Reassurance plan: no router port forwards,
+SSH key-only from the home subnet via Windows Firewall, no ZeroTier on it, no remote-control apps,
+Defender + updates on, optional AT&amp;T per-device internet block, optional GPU power cap (~170 → 120 W).</li>
 <li>He mainly games on it. Wants the <strong>Mac as home base</strong> and the PC as an optimized training step,
 not a daily workstation.</li>
 <li>mjlab (microduck_rl&#39;s engine) officially: training <strong>Linux only</strong>, WSL listed for evaluation only;
@@ -242,6 +247,17 @@ config backed up to <code>~/.ssh/config.bak-2026-11-03</code>). Host key ED25519
 network on). Has Xcode + git 2.50; <strong>no Homebrew, uv, Rust or Node</strong>. Leland: admin, in Keller IT, may
 install anything. At first login it was busy (load ~20–32): Spotlight indexing + preparing a macOS
 27.2 update; <strong>don&#39;t benchmark while that&#39;s running</strong>.</li>
+<li><strong>Studio fully installed 2026-11-03 (same as the laptop, Leland: &quot;when I switch to studio I don&#39;t want
+to be limited&quot;)</strong>: Homebrew (Leland ran the installer with his password via <code>ssh -t studio</code>; Claude can&#39;t
+sudo), uv 0.13.7, Node 26, gh, GStreamer 1.28.8 + libnice-gstreamer, Rust 1.99.1 (stable, 1.3 GB),
+<code>~/microduck</code> (fork, <code>leland</code> branch, <code>upstream</code> remote; daemons built in <strong>32 s</strong> vs laptop 51 s),
+<code>~/Pollen/microduck_rl</code> (develop <code>bae39f59</code>, .venv 1.1 GB), <code>~/microduck-lab</code> (<code>8dad921</code>, 1.8 GB,
+setup &quot;Ready&quot;), uv cache 1.6 GB, Homebrew cellar 1.4 GB. <strong>Simulator verified: stands, loop 49.9/50 Hz,
+<code>drive 0.4 0</code> walked 1.31 m</strong> (measured via port 7801).</li>
+<li><strong>Showing things on the Studio&#39;s screens:</strong> <code>ssh studio &#39;osascript -e &quot;tell application \&quot;Terminal\&quot; to do script \&quot;…\&quot;&quot;&#39;</code> opens a Terminal window in Leland&#39;s logged-in desktop (he granted the Automation
+permission 2026-11-03). Run duck-sim, training and long jobs that way so he can watch upstairs.
+<code>duck-sim status</code> straight after launch can say &quot;did not stand up&quot;: it&#39;s still starting, re-check.</li>
+<li>Not yet on the Studio: VS Code + Claude Code, crossfeed (asked, unanswered).</li>
 <li>Steps Leland must do at the Studio once: Sharing → <strong>Remote Login</strong> on (and <strong>Screen Sharing</strong> on);
 note the &quot;Local hostname&quot;; Energy → prevent sleep when display off + wake for network access.
 Then from the laptop: <code>ssh-copy-id &lt;user&gt;@&lt;hostname&gt;.local</code> (he types the Studio password once)
