@@ -221,5 +221,23 @@ microduck-lab at <code>~/microduck-lab</code> (1.9 GB, own pinned Pollen clones 
 (Pollen&#39;s alpha_walking through the same harness: 1.06 m / 1.70 m). Explained in <code>leland/TRAINING.md</code>.
 Finder available after all: 63.2 GB.</li>
 </ul>
+<h3>Mac Studio upstairs: connecting the laptop to it (started 2026-11-03)</h3>
+<ul>
+<li>Goal: Leland&#39;s newer <strong>Mac Studio</strong> (wired to AT&amp;T) usable headless from the laptop: Claude runs
+commands on it over SSH; Leland sees its screen with Screen Sharing. Then benchmark it for training.</li>
+<li>Laptop measured: <strong>M1 Pro (8 performance + 2 efficiency cores), 32 GB</strong>, on AT&amp;T Wi-Fi,
+192.168.1.x. Two home networks (AT&amp;T fiber, Spectrum cable): <strong>both machines must be on AT&amp;T</strong>.</li>
+<li>Scan 2026-11-03: the Studio did <strong>not</strong> appear on the home network (no SSH, no Screen Sharing; the
+only Windows box answering is <code>TF-260416140219</code> at .201, probably the gaming PC). The Macs that do
+show up (names starting SAN/CHS) come over <strong>ZeroTier</strong> (<code>feth1592</code>, 192.168.193.x), almost
+certainly the Keller work network. <strong>Not Leland&#39;s: never connect to them.</strong></li>
+<li>Steps Leland must do at the Studio once: Sharing → <strong>Remote Login</strong> on (and <strong>Screen Sharing</strong> on);
+note the &quot;Local hostname&quot;; Energy → prevent sleep when display off + wake for network access.
+Then from the laptop: <code>ssh-copy-id &lt;user&gt;@&lt;hostname&gt;.local</code> (he types the Studio password once)
+and an <code>ssh</code> alias <code>studio</code> in <code>~/.ssh/config</code>.</li>
+<li>Training on it: still <strong>no CUDA on any Mac</strong>, so official microduck_rl stays on the PC/HF Jobs.
+microduck-lab is CPU-bound, so a Studio with more cores should go faster: measure it with the same
+3M-step <code>first-gait</code> run (laptop: ~9 min, with an install running alongside).</li>
+</ul>
 
 </div></body></html>

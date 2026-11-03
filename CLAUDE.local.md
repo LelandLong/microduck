@@ -172,3 +172,20 @@
   3M steps = 9 min, eval 0/20 falls, lin-vel error 0.23 m/s, **but it only STANDS**: 0.00 m at vx 0.15/0.3/0.5
   (Pollen's alpha_walking through the same harness: 1.06 m / 1.70 m). Explained in `leland/TRAINING.md`.
   Finder available after all: 63.2 GB.
+
+### Mac Studio upstairs: connecting the laptop to it (started 2026-11-03)
+- Goal: Leland's newer **Mac Studio** (wired to AT&T) usable headless from the laptop: Claude runs
+  commands on it over SSH; Leland sees its screen with Screen Sharing. Then benchmark it for training.
+- Laptop measured: **M1 Pro (8 performance + 2 efficiency cores), 32 GB**, on AT&T Wi-Fi,
+  192.168.1.x. Two home networks (AT&T fiber, Spectrum cable): **both machines must be on AT&T**.
+- Scan 2026-11-03: the Studio did **not** appear on the home network (no SSH, no Screen Sharing; the
+  only Windows box answering is `TF-260416140219` at .201, probably the gaming PC). The Macs that do
+  show up (names starting SAN/CHS) come over **ZeroTier** (`feth1592`, 192.168.193.x), almost
+  certainly the Keller work network. **Not Leland's: never connect to them.**
+- Steps Leland must do at the Studio once: Sharing → **Remote Login** on (and **Screen Sharing** on);
+  note the "Local hostname"; Energy → prevent sleep when display off + wake for network access.
+  Then from the laptop: `ssh-copy-id <user>@<hostname>.local` (he types the Studio password once)
+  and an `ssh` alias `studio` in `~/.ssh/config`.
+- Training on it: still **no CUDA on any Mac**, so official microduck_rl stays on the PC/HF Jobs.
+  microduck-lab is CPU-bound, so a Studio with more cores should go faster: measure it with the same
+  3M-step `first-gait` run (laptop: ~9 min, with an install running alongside).
