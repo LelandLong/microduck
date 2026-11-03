@@ -234,6 +234,14 @@ certainly the Keller work network. <strong>Not Leland&#39;s: never connect to th
 <li><strong>Found 2026-11-03 16:00:</strong> Bonjour name &quot;CHS Leland Mac Studio (2025)&quot;, hostname
 <code>CHS-Leland-Mac-Studio-2025.local</code> (home 192.168.1.243/.167/.248, also on Keller ZeroTier). It is
 <strong>Keller-owned</strong>, with Remote Management on: Screen Sharing (5900) and ARD (3283) open, <strong>SSH (22) closed</strong>.</li>
+<li><strong>Connected 2026-11-03 16:05: <code>ssh studio</code> works</strong> (user <code>lelandlong</code>, key <code>~/.ssh/id_ed25519</code>,
+<code>IdentitiesOnly yes</code>: the laptop agent holds 23 keys and the Studio drops you after 6 tries; old
+config backed up to <code>~/.ssh/config.bak-2026-11-03</code>). Host key ED25519 <code>SHA256:jO1/OvVI…fnU0</code>.</li>
+<li><strong>Studio measured:</strong> Mac Studio Mac16,9, <strong>M4 Max, 14 cores (10 performance + 4 efficiency), 32-core GPU,
+36 GB</strong>, macOS 26.6.1, <strong>135.7 GB available (Finder&#39;s figure)</strong> of 494. Never sleeps (sleep 0, wake on
+network on). Has Xcode + git 2.50; <strong>no Homebrew, uv, Rust or Node</strong>. Leland: admin, in Keller IT, may
+install anything. At first login it was busy (load ~20–32): Spotlight indexing + preparing a macOS
+27.2 update; <strong>don&#39;t benchmark while that&#39;s running</strong>.</li>
 <li>Steps Leland must do at the Studio once: Sharing → <strong>Remote Login</strong> on (and <strong>Screen Sharing</strong> on);
 note the &quot;Local hostname&quot;; Energy → prevent sleep when display off + wake for network access.
 Then from the laptop: <code>ssh-copy-id &lt;user&gt;@&lt;hostname&gt;.local</code> (he types the Studio password once)
