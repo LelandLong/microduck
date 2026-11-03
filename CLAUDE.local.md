@@ -141,3 +141,11 @@
 - Optional: camera = GStreamer + libnice-gstreamer, **58 new Homebrew packages** (incl. GTK 3/4, a
   second Python) ~1.5–2.5 GB (est.); microduck-lab ~3 GB (its README).
 - Everything ≈ **13–16 GB**, leaving ~53 GB. Not needed on the Mac: Docker, CUDA, git-lfs, multi-duck `boot`.
+
+### Installed on the Mac (2026-11-03) — **the local simulator works**
+- Rust 1.99.1 via rustup (`~/.rustup` 1.3 GB, `~/.cargo` 0.3 GB; shell needs `. "$HOME/.cargo/env"`),
+  `uv` 0.13.7 via Homebrew, `~/Pollen/microduck_rl` + `.venv` (1.2 GB), uv cache 1.2 GB,
+  this repo's `target/` 2.0 GB (daemons built in 51 s). **≈ 6 GB total**, less than the 8–10 GB estimate.
+- `scripts/duck-sim` ran first time: MuJoCo window, duck stood up, loop 50.0/50 Hz, 0 missed ticks;
+  `scripts/duck-sim drive` walked it 8 s and it was still standing after. Policies fetched automatically.
+- Not installed yet: camera (GStreamer), microduck-lab.
