@@ -182,6 +182,9 @@
   only Windows box answering is `TF-260416140219` at .201, probably the gaming PC). The Macs that do
   show up (names starting SAN/CHS) come over **ZeroTier** (`feth1592`, 192.168.193.x), almost
   certainly the Keller work network. **Not Leland's: never connect to them.**
+- **Found 2026-11-03 16:00:** Bonjour name "CHS Leland Mac Studio (2025)", hostname
+  `CHS-Leland-Mac-Studio-2025.local` (home 192.168.1.243/.167/.248, also on Keller ZeroTier). It is
+  **Keller-owned**, with Remote Management on: Screen Sharing (5900) and ARD (3283) open, **SSH (22) closed**.
 - Steps Leland must do at the Studio once: Sharing → **Remote Login** on (and **Screen Sharing** on);
   note the "Local hostname"; Energy → prevent sleep when display off + wake for network access.
   Then from the laptop: `ssh-copy-id <user>@<hostname>.local` (he types the Studio password once)
