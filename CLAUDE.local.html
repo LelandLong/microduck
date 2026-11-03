@@ -82,6 +82,20 @@ cloud session, <code>npm install</code> in <code>leland/tools</code> first). Com
 dir, film each with the walk env (<code>train.env_class(&quot;microduck&quot;,&quot;walk&quot;)</code>, domain_rand off, fixed
 <code>twist_cmd</code>), tile with PIL, write mp4 with imageio. Verify motion by distance, not by eval score.</li>
 </ul>
+<h2>▶ Where we are right now (updated 2026-11-03 ~17:30, read this first)</h2>
+<ul>
+<li><strong>Today&#39;s done:</strong> Mac Studio connected (<code>ssh studio</code>), fully installed, simulator verified, training race
+(Studio 2.2x laptop). Gaming PC connected (<code>ssh pc</code>, key only, passwords off). See <code>leland/MACHINES.md</code>.</li>
+<li><strong>In progress:</strong> installing WSL2 + Ubuntu 24.04 + Pollen&#39;s <code>microduck_rl</code> (NVIDIA training) on the PC, on C:
+(~12–15 GB, Leland approved incl. one restart). Steps: <code>wsl --install --no-distribution</code> (started 17:30)
+→ restart PC → Ubuntu 24.04, Linux user <code>leland</code> → <code>uv</code> + clone <code>microduck_rl</code> → <code>uv sync</code> → short test run
+of <code>uv run train Mjlab-Velocity-Flat-MicroDuck</code> (Kevin Wood&#39;s video notes) → measure speed → Wake-on-LAN +
+auto-shutdown. GPU power cap optional. No ZeroTier, no remote-control apps on the PC.</li>
+<li>Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with <code>caffeinate</code> for 12 h).</li>
+<li><strong>A Claude Cloud session can&#39;t reach the Studio or the PC</strong> (they&#39;re on the home network; the cloud isn&#39;t).
+For hands-on work from the iPhone, use <strong>Remote Control</strong> of the laptop session instead. A cloud session is
+fine for reading and editing these notes, and for planning and learning.</li>
+</ul>
 <h2>Session start</h2>
 <ol>
 <li>This file, then the upstream <code>CLAUDE.md</code>, then the newest <code>leland/sessions/</code> log.</li>
