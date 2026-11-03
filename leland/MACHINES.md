@@ -123,6 +123,18 @@ It installs Windows' own OpenSSH server, limits it to the home network, trusts o
 - Measured: RTX 3060 **12,288 MB**, driver 596.49, power limit 170 W, idle 32 °C; C: 152 GB free.
   **WSL not installed yet.**
 
+**✅ Linux + Pollen's training installed 2026-11-03 17:30–17:45** (all from the laptop over SSH, nobody logged in at the PC):
+- `dism` to switch on the two Windows features (`Microsoft-Windows-Subsystem-Linux`, `VirtualMachinePlatform`), restart.
+  (`wsl --install` and `winget` don't work over SSH; the WSL package came from Microsoft's GitHub release
+  `wsl.3.0.3.0.x64.msi`, signature checked: Microsoft Corporation.)
+- **WSL 3.0.3**, **Ubuntu 24.04.5**, Linux user `leland` (no password; passwordless `sudo`), systemd on. Linux disk
+  on C:, 1 TB ceiling, 9.2 GB used. Linux sees 20 threads, ~8 GB RAM (WSL's default half), and **the RTX 3060**.
+- `uv` 0.13.7, `~/microduck_rl` (develop `bae39f59`), `uv sync` in **57 s**, `.venv` 7.8 GB.
+- **First GPU training test** (`uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
+  --agent.max-iterations 50`, `WANDB_MODE=disabled`): ran fine, **3.66 s per iteration**, 50 iterations in ~3 min.
+  Like Kevin Wood's 3.8 s. So: **750 iterations (first walking) ≈ 46 min; 4,000 (walks with purpose) ≈ 4 h.**
+- Run any command: `ssh pc 'wsl -d Ubuntu-24.04 -- bash -lc "…"'`.
+
 **How it will work:**
 - **Switched on from the laptop** (Wake-on-LAN, over the wired home network). Needs two settings checked on
   the PC: one in the BIOS, one on the network adapter.

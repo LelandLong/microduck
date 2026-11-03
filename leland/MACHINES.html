@@ -228,6 +228,18 @@ so the laptop warns about &quot;post-quantum key exchange&quot;. That&#39;s harm
 <li>Measured: RTX 3060 <strong>12,288 MB</strong>, driver 596.49, power limit 170 W, idle 32 °C; C: 152 GB free.
 <strong>WSL not installed yet.</strong></li>
 </ul>
+<p><strong>✅ Linux + Pollen&#39;s training installed 2026-11-03 17:30–17:45</strong> (all from the laptop over SSH, nobody logged in at the PC):</p>
+<ul>
+<li><code>dism</code> to switch on the two Windows features (<code>Microsoft-Windows-Subsystem-Linux</code>, <code>VirtualMachinePlatform</code>), restart.
+(<code>wsl --install</code> and <code>winget</code> don&#39;t work over SSH; the WSL package came from Microsoft&#39;s GitHub release
+<code>wsl.3.0.3.0.x64.msi</code>, signature checked: Microsoft Corporation.)</li>
+<li><strong>WSL 3.0.3</strong>, <strong>Ubuntu 24.04.5</strong>, Linux user <code>leland</code> (no password; passwordless <code>sudo</code>), systemd on. Linux disk
+on C:, 1 TB ceiling, 9.2 GB used. Linux sees 20 threads, ~8 GB RAM (WSL&#39;s default half), and <strong>the RTX 3060</strong>.</li>
+<li><code>uv</code> 0.13.7, <code>~/microduck_rl</code> (develop <code>bae39f59</code>), <code>uv sync</code> in <strong>57 s</strong>, <code>.venv</code> 7.8 GB.</li>
+<li><strong>First GPU training test</strong> (<code>uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096 --agent.max-iterations 50</code>, <code>WANDB_MODE=disabled</code>): ran fine, <strong>3.66 s per iteration</strong>, 50 iterations in ~3 min.
+Like Kevin Wood&#39;s 3.8 s. So: <strong>750 iterations (first walking) ≈ 46 min; 4,000 (walks with purpose) ≈ 4 h.</strong></li>
+<li>Run any command: <code>ssh pc &#39;wsl -d Ubuntu-24.04 -- bash -lc &quot;…&quot;&#39;</code>.</li>
+</ul>
 <p><strong>How it will work:</strong></p>
 <ul>
 <li><strong>Switched on from the laptop</strong> (Wake-on-LAN, over the wired home network). Needs two settings checked on

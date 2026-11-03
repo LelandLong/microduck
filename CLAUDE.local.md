@@ -47,11 +47,10 @@
 ## ▶ Where we are right now (updated 2026-11-03 ~17:30, read this first)
 - **Today's done:** Mac Studio connected (`ssh studio`), fully installed, simulator verified, training race
   (Studio 2.2x laptop). Gaming PC connected (`ssh pc`, key only, passwords off). See `leland/MACHINES.md`.
-- **In progress:** installing WSL2 + Ubuntu 24.04 + Pollen's `microduck_rl` (NVIDIA training) on the PC, on C:
-  (~12–15 GB, Leland approved incl. one restart). Steps: `wsl --install --no-distribution` (started 17:30)
-  → restart PC → Ubuntu 24.04, Linux user `leland` → `uv` + clone `microduck_rl` → `uv sync` → short test run
-  of `uv run train Mjlab-Velocity-Flat-MicroDuck` (Kevin Wood's video notes) → measure speed → Wake-on-LAN +
-  auto-shutdown. GPU power cap optional. No ZeroTier, no remote-control apps on the PC.
+- **Done 17:45: PC has WSL 3.0.3 + Ubuntu 24.04 + `~/microduck_rl`; GPU training test ran, 3.66 s/iteration**
+  (750 it ≈ 46 min, 4,000 ≈ 4 h). Details in `leland/MACHINES.md`. **Next:** Wake-on-LAN (needs BIOS +
+  adapter settings, MAC `50:eb:f6:ca:72:a1`) + auto-shutdown after runs; offer Leland a first real run.
+  GPU power cap optional. No ZeroTier, no remote-control apps on the PC.
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is
