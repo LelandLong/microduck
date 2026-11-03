@@ -10,6 +10,8 @@ Set-Service -Name sshd -StartupType Automatic
 Start-Service sshd
 
 Write-Host "2/4  Firewall: only devices on the home network may connect..."
+# The rule only applies on Private networks, and Windows had the home Ethernet marked Public.
+Set-NetConnectionProfile -InterfaceAlias Ethernet -NetworkCategory Private
 Set-NetFirewallRule -Name OpenSSH-Server-In-TCP -RemoteAddress LocalSubnet
 
 Write-Host "3/4  Trusting my laptop's key (public half, from github.com/LelandLong.keys)..."
