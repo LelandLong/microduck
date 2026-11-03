@@ -97,7 +97,19 @@ The same as the laptop (see [`INSTALL.md`](INSTALL.md)), about 8 GB:
 
 The Studio is a **Keller machine**. I'm in Keller IT, with admin rights and permission to install.
 
-## Gaming PC: the plan (not set up yet)
+## Gaming PC: the plan (being set up)
+
+**Found on the network 2026-11-03:** `rerun-gamer.local`, 192.168.1.194, network card `50:eb:f6:ca:72:a1`
+(needed later to wake it remotely). Laptop shortcut: `ssh pc` (user `lelan`, same key as the Studio).
+
+**Step 1, SSH into Windows:** in an **administrator** PowerShell on the PC, run [`pc/setup-ssh.ps1`](pc/setup-ssh.ps1):
+
+```powershell
+irm https://raw.githubusercontent.com/LelandLong/microduck/leland/leland/pc/setup-ssh.ps1 | iex
+```
+
+It installs Windows' own OpenSSH server, limits it to the home network, trusts only my laptop's key
+(fetched from `github.com/LelandLong.keys`) and turns password logins off.
 
 **How it will work:**
 - **Switched on from the laptop** (Wake-on-LAN, over the wired home network). Needs two settings checked on

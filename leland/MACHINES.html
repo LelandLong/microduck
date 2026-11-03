@@ -207,7 +207,14 @@ wrong ones. That was the &quot;Too many authentication failures&quot; error.</p>
 <p><strong>Checked working:</strong> the simulator stood up (control loop 49.9 of 50 times a second, none missed) and
 <code>drive 0.4 0</code> walked the duck <strong>1.31 m</strong>, measured from the simulator&#39;s own position readings.</p>
 <p>The Studio is a <strong>Keller machine</strong>. I&#39;m in Keller IT, with admin rights and permission to install.</p>
-<h2>Gaming PC: the plan (not set up yet)</h2>
+<h2>Gaming PC: the plan (being set up)</h2>
+<p><strong>Found on the network 2026-11-03:</strong> <code>rerun-gamer.local</code>, 192.168.1.194, network card <code>50:eb:f6:ca:72:a1</code>
+(needed later to wake it remotely). Laptop shortcut: <code>ssh pc</code> (user <code>lelan</code>, same key as the Studio).</p>
+<p><strong>Step 1, SSH into Windows:</strong> in an <strong>administrator</strong> PowerShell on the PC, run <a href="pc/setup-ssh.ps1"><code>pc/setup-ssh.ps1</code></a>:</p>
+<pre><code class="language-powershell">irm https://raw.githubusercontent.com/LelandLong/microduck/leland/leland/pc/setup-ssh.ps1 | iex
+</code></pre>
+<p>It installs Windows&#39; own OpenSSH server, limits it to the home network, trusts only my laptop&#39;s key
+(fetched from <code>github.com/LelandLong.keys</code>) and turns password logins off.</p>
 <p><strong>How it will work:</strong></p>
 <ul>
 <li><strong>Switched on from the laptop</strong> (Wake-on-LAN, over the wired home network). Needs two settings checked on
