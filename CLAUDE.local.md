@@ -146,6 +146,12 @@
 - Rust 1.99.1 via rustup (`~/.rustup` 1.3 GB, `~/.cargo` 0.3 GB; shell needs `. "$HOME/.cargo/env"`),
   `uv` 0.13.7 via Homebrew, `~/Pollen/microduck_rl` + `.venv` (1.2 GB), uv cache 1.2 GB,
   this repo's `target/` 2.0 GB (daemons built in 51 s). **≈ 6 GB total**, less than the 8–10 GB estimate.
-- `scripts/duck-sim` ran first time: MuJoCo window, duck stood up, loop 50.0/50 Hz, 0 missed ticks;
-  `scripts/duck-sim drive` walked it 8 s and it was still standing after. Policies fetched automatically.
+- `scripts/duck-sim` ran first time: MuJoCo window, duck stood up, loop 50.0/50 Hz, 0 missed ticks.
+  Policies fetched automatically. Full write-up for Leland: `leland/INSTALL.md`.
+- **`drive` with no args does NOT walk** (I wrongly reported it did: I only checked it was still
+  standing). Default vx 0.15 is below the current walking policy's effective threshold (~0.25):
+  measured 0.15 → 6 mm in 4 s, 0.20 → 8 mm, 0.30 → 45 cm, 0.50 → 82 cm. Use `drive 0.4 0`.
+  Likely a stale script default worth reporting to Pollen.
+- **Lesson: verify motion by measuring it.** The body's TCP port (7801) answers
+  `{"op":"hello","protocol":1,"joints":15}` then `{"op":"read"}` with `trunk` [x,y,z]; compare before/after.
 - Not installed yet: camera (GStreamer), microduck-lab.
