@@ -115,7 +115,7 @@
 
 ### Leland's gaming PC (from his System Information screenshots, 2026-10-30)
 - ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
-  **NVIDIA RTX 3060** (VRAM not shown; desktop 3060 is usually 12 GB, confirm with `nvidia-smi`),
+  **NVIDIA RTX 3060, 12 GB** (confirmed in Task Manager 2026-11-03),
   driver 32.0.15.9636 = NVIDIA 596.36.
 - **PC plan Leland likes (2026-11-03):** Claude wakes it from the laptop (Wake-on-LAN; check BIOS +
   network-adapter setting, it's wired) and every training run **shuts it down at the end**. Worries: being
@@ -124,9 +124,9 @@
   Defender + updates on, optional AT&T per-device internet block, optional GPU power cap (~170 → 120 W).
 - From his screenshots 2026-11-03: name **RERUN_GAMER**, Windows user `lelan`, build 26200, UEFI + Secure
   Boot, BIOS G15CF.301 (2022), **"Virtualization-based security: Running" = CPU virtualization already on**
-  (WSL2 needs it), three screens (5760x1080). VRAM still unknown (msinfo's "1 MB" is a known 4 GB-field
-  bug; use Task Manager → GPU). Has a large, mostly unused 2nd drive: put the WSL2 disk there
-  (`wsl --install --location D:\...`), 20–50 GB needed; SSD or HDD not yet known.
+  (WSL2 needs it), three screens (5760x1080). **VRAM 12.0 GB** (Task Manager; msinfo's "1 MB" is a
+  4 GB-field bug), driver 596.49. **C: NVMe SSD, 124 of 453 GB free; D: "DATA" SATA hard drive, 887 of 931
+  GB free.** WSL2 disk needs 20–50 GB; where it goes is Leland's choice (see `leland/MACHINES.md`).
 - He mainly games on it. Wants the **Mac as home base** and the PC as an optimized training step,
   not a daily workstation.
 - mjlab (microduck_rl's engine) officially: training **Linux only**, WSL listed for evaluation only;

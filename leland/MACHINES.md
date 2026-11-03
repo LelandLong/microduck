@@ -7,8 +7,8 @@ and the **gaming PC** will be the NVIDIA training box: switched on only when a r
 |---|---|---|---|
 | Chip | M1 Pro (2021) | **M4 Max** (2025) | Intel i7-12700F + **NVIDIA RTX 3060** |
 | Processor cores | 10 (8 fast, 2 efficient) | **14** (10 fast, 4 efficient) | 12 (20 threads) |
-| Memory | 32 GB | 36 GB | 16 GB |
-| Free space (Finder) | 63 GB | 136 GB | large, mostly empty 2nd drive |
+| Memory | 32 GB | 36 GB | 16 GB (+ **12 GB** on the graphics card) |
+| Free space | 63 GB (Finder) | 136 GB (Finder) | C: SSD 124 of 453 GB · D: hard drive 887 of 931 GB |
 | Network | AT&T Wi-Fi | AT&T, wired | AT&T, wired |
 | Name on the network | Leland's MacBook Pro | `CHS-Leland-Mac-Studio-2025.local` | `RERUN_GAMER` |
 | Status | ✅ everything installed | ✅ everything installed | ⏳ not set up yet |
@@ -125,6 +125,22 @@ video shows it failing) but does in WSL2.
 NVIDIA driver 596.36 (Pollen's training needs 580+), **"Virtualization-based security: Running"** = the
 processor's virtualization is already switched on (WSL2 needs it), UEFI + Secure Boot, Windows user `lelan`.
 
-**Still to check on the PC** (Task Manager → Performance):
-- **GPU → Dedicated GPU memory** (probably 12 GB). System Information's "1 MB" is a Windows bug.
-- **Whether the second drive is an SSD or HDD.** Either works; an SSD is quicker.
+**Checked 2026-11-03 (Task Manager + This PC):**
+- **Graphics card memory: 12.0 GB.** (System Information's "1 MB" was the Windows bug.) Driver now
+  32.0.15.9649 = NVIDIA 596.49, dated 2026-05-05.
+- **C: is a fast SSD (NVMe), 124 GB free of 453. D: "DATA" is a spinning hard drive (SATA HDD), 887 GB free
+  of 931.**
+- Decision on where Linux goes: see below.
+
+**Where Linux should go: C: (SSD) or D: (hard drive)?** (open, my call)
+
+| | Linux on **C:** (SSD) | Linux on **D:** (hard drive) |
+|---|---|---|
+| Space | 124 GB free; Linux takes 20–50 GB | 887 GB free, room for anything |
+| Installing (thousands of small files) | minutes | noticeably slower, maybe 5–10× |
+| Starting a training run | seconds | slower to load |
+| Training itself | same: the graphics card does the work | same |
+
+Recommended: **Linux on C:** for speed, and **old runs, videos and archives on D:**, which Linux can
+reach as `/mnt/d`. If C: ever gets tight, the Linux file can move to D: with one command
+(`wsl --manage <name> --move D:\WSL`).

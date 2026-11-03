@@ -60,13 +60,13 @@ and the <strong>gaming PC</strong> will be the NVIDIA training box: switched on 
 <td>Memory</td>
 <td>32 GB</td>
 <td>36 GB</td>
-<td>16 GB</td>
+<td>16 GB (+ <strong>12 GB</strong> on the graphics card)</td>
 </tr>
 <tr>
-<td>Free space (Finder)</td>
-<td>63 GB</td>
-<td>136 GB</td>
-<td>large, mostly empty 2nd drive</td>
+<td>Free space</td>
+<td>63 GB (Finder)</td>
+<td>136 GB (Finder)</td>
+<td>C: SSD 124 of 453 GB · D: hard drive 887 of 931 GB</td>
 </tr>
 <tr>
 <td>Network</td>
@@ -234,10 +234,46 @@ and no port on the router will ever be opened.</li>
 <p><strong>Known from its System Information (2026-11-03):</strong> Windows 11 Home build 26200 (WSL2 works on Home),
 NVIDIA driver 596.36 (Pollen&#39;s training needs 580+), <strong>&quot;Virtualization-based security: Running&quot;</strong> = the
 processor&#39;s virtualization is already switched on (WSL2 needs it), UEFI + Secure Boot, Windows user <code>lelan</code>.</p>
-<p><strong>Still to check on the PC</strong> (Task Manager → Performance):</p>
+<p><strong>Checked 2026-11-03 (Task Manager + This PC):</strong></p>
 <ul>
-<li><strong>GPU → Dedicated GPU memory</strong> (probably 12 GB). System Information&#39;s &quot;1 MB&quot; is a Windows bug.</li>
-<li><strong>Whether the second drive is an SSD or HDD.</strong> Either works; an SSD is quicker.</li>
+<li><strong>Graphics card memory: 12.0 GB.</strong> (System Information&#39;s &quot;1 MB&quot; was the Windows bug.) Driver now
+32.0.15.9649 = NVIDIA 596.49, dated 2026-05-05.</li>
+<li><strong>C: is a fast SSD (NVMe), 124 GB free of 453. D: &quot;DATA&quot; is a spinning hard drive (SATA HDD), 887 GB free
+of 931.</strong></li>
+<li>Decision on where Linux goes: see below.</li>
 </ul>
+<p><strong>Where Linux should go: C: (SSD) or D: (hard drive)?</strong> (open, my call)</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Linux on <strong>C:</strong> (SSD)</th>
+<th>Linux on <strong>D:</strong> (hard drive)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Space</td>
+<td>124 GB free; Linux takes 20–50 GB</td>
+<td>887 GB free, room for anything</td>
+</tr>
+<tr>
+<td>Installing (thousands of small files)</td>
+<td>minutes</td>
+<td>noticeably slower, maybe 5–10×</td>
+</tr>
+<tr>
+<td>Starting a training run</td>
+<td>seconds</td>
+<td>slower to load</td>
+</tr>
+<tr>
+<td>Training itself</td>
+<td>same: the graphics card does the work</td>
+<td>same</td>
+</tr>
+</tbody></table>
+<p>Recommended: <strong>Linux on C:</strong> for speed, and <strong>old runs, videos and archives on D:</strong>, which Linux can
+reach as <code>/mnt/d</code>. If C: ever gets tight, the Linux file can move to D: with one command
+(<code>wsl --manage &lt;name&gt; --move D:\WSL</code>).</p>
 
 </div></body></html>

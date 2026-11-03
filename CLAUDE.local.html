@@ -159,7 +159,7 @@ minute; needs a <strong>positive prepaid credit balance</strong>. Default 12 h t
 <h3>Leland&#39;s gaming PC (from his System Information screenshots, 2026-10-30)</h3>
 <ul>
 <li>ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
-<strong>NVIDIA RTX 3060</strong> (VRAM not shown; desktop 3060 is usually 12 GB, confirm with <code>nvidia-smi</code>),
+<strong>NVIDIA RTX 3060, 12 GB</strong> (confirmed in Task Manager 2026-11-03),
 driver 32.0.15.9636 = NVIDIA 596.36.</li>
 <li><strong>PC plan Leland likes (2026-11-03):</strong> Claude wakes it from the laptop (Wake-on-LAN; check BIOS +
 network-adapter setting, it&#39;s wired) and every training run <strong>shuts it down at the end</strong>. Worries: being
@@ -168,9 +168,9 @@ SSH key-only from the home subnet via Windows Firewall, no ZeroTier on it, no re
 Defender + updates on, optional AT&amp;T per-device internet block, optional GPU power cap (~170 → 120 W).</li>
 <li>From his screenshots 2026-11-03: name <strong>RERUN_GAMER</strong>, Windows user <code>lelan</code>, build 26200, UEFI + Secure
 Boot, BIOS G15CF.301 (2022), <strong>&quot;Virtualization-based security: Running&quot; = CPU virtualization already on</strong>
-(WSL2 needs it), three screens (5760x1080). VRAM still unknown (msinfo&#39;s &quot;1 MB&quot; is a known 4 GB-field
-bug; use Task Manager → GPU). Has a large, mostly unused 2nd drive: put the WSL2 disk there
-(<code>wsl --install --location D:\...</code>), 20–50 GB needed; SSD or HDD not yet known.</li>
+(WSL2 needs it), three screens (5760x1080). <strong>VRAM 12.0 GB</strong> (Task Manager; msinfo&#39;s &quot;1 MB&quot; is a
+4 GB-field bug), driver 596.49. <strong>C: NVMe SSD, 124 of 453 GB free; D: &quot;DATA&quot; SATA hard drive, 887 of 931
+GB free.</strong> WSL2 disk needs 20–50 GB; where it goes is Leland&#39;s choice (see <code>leland/MACHINES.md</code>).</li>
 <li>He mainly games on it. Wants the <strong>Mac as home base</strong> and the PC as an optimized training step,
 not a daily workstation.</li>
 <li>mjlab (microduck_rl&#39;s engine) officially: training <strong>Linux only</strong>, WSL listed for evaluation only;
