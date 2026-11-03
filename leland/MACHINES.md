@@ -133,7 +133,22 @@ It installs Windows' own OpenSSH server, limits it to the home network, trusts o
 - **First GPU training test** (`uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096
   --agent.max-iterations 50`, `WANDB_MODE=disabled`): ran fine, **3.66 s per iteration**, 50 iterations in ~3 min.
   Like Kevin Wood's 3.8 s. So: **750 iterations (first walking) ≈ 46 min; 4,000 (walks with purpose) ≈ 4 h.**
-- Run any command: `ssh pc 'wsl -d Ubuntu-24.04 -- bash -lc "…"'`.
+- Run any command: `ssh pc 'wsl -d Ubuntu-24.04 -- bash -s' <<'EOF' … EOF` (pipe the script in; inline `|` and quotes
+  get mangled by Windows' command shell).
+
+**✅ First real run 2026-11-03 17:46–18:31: 750 rounds in 43 min 28 s, and the duck walks** (2.46 m in 8 s at
+0.5 m/s, never falls). Full story: [`TRAINING.md`](TRAINING.md) section 12. Results copied to the laptop
+(`~/microduck-runs/pc/`), PC shut down 18:39.
+
+**Lessons from the first run (fix before the next):**
+- **The automatic shutdown didn't happen.** The run script called Windows' `shutdown.exe` from inside Linux; it
+  logged "scheduled", but Windows had nothing pending. Probably not allowed from a background Linux process. Fix:
+  a Windows scheduled task that runs as SYSTEM, triggered at the end of the run. I shut it down by hand this time.
+- **Copying results:** streaming files through SSH out of Linux hung. What worked: pack them onto C:
+  (`/mnt/c/Users/lelan/microduck-runs/`), then `scp pc:C:/Users/lelan/microduck-runs/<file> .`
+- **`rerun-gamer.local` stopped resolving** mid-evening, so `ssh pc` now uses the address **192.168.1.194**. That
+  can change; reserving it in the AT&T gateway (DHCP reservation for `50:eb:f6:ca:72:a1`) would pin it.
+- **WSL stops Linux when nothing is connected,** so a laptop SSH session stays open during a run. To be confirmed.
 
 **How it will work:**
 - **Switched on from the laptop** (Wake-on-LAN, over the wired home network). Needs two settings checked on

@@ -238,7 +238,22 @@ on C:, 1 TB ceiling, 9.2 GB used. Linux sees 20 threads, ~8 GB RAM (WSL&#39;s de
 <li><code>uv</code> 0.13.7, <code>~/microduck_rl</code> (develop <code>bae39f59</code>), <code>uv sync</code> in <strong>57 s</strong>, <code>.venv</code> 7.8 GB.</li>
 <li><strong>First GPU training test</strong> (<code>uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096 --agent.max-iterations 50</code>, <code>WANDB_MODE=disabled</code>): ran fine, <strong>3.66 s per iteration</strong>, 50 iterations in ~3 min.
 Like Kevin Wood&#39;s 3.8 s. So: <strong>750 iterations (first walking) ≈ 46 min; 4,000 (walks with purpose) ≈ 4 h.</strong></li>
-<li>Run any command: <code>ssh pc &#39;wsl -d Ubuntu-24.04 -- bash -lc &quot;…&quot;&#39;</code>.</li>
+<li>Run any command: <code>ssh pc &#39;wsl -d Ubuntu-24.04 -- bash -s&#39; &lt;&lt;&#39;EOF&#39; … EOF</code> (pipe the script in; inline <code>|</code> and quotes
+get mangled by Windows&#39; command shell).</li>
+</ul>
+<p><strong>✅ First real run 2026-11-03 17:46–18:31: 750 rounds in 43 min 28 s, and the duck walks</strong> (2.46 m in 8 s at
+0.5 m/s, never falls). Full story: <a href="TRAINING.html"><code>TRAINING.md</code></a> section 12. Results copied to the laptop
+(<code>~/microduck-runs/pc/</code>), PC shut down 18:39.</p>
+<p><strong>Lessons from the first run (fix before the next):</strong></p>
+<ul>
+<li><strong>The automatic shutdown didn&#39;t happen.</strong> The run script called Windows&#39; <code>shutdown.exe</code> from inside Linux; it
+logged &quot;scheduled&quot;, but Windows had nothing pending. Probably not allowed from a background Linux process. Fix:
+a Windows scheduled task that runs as SYSTEM, triggered at the end of the run. I shut it down by hand this time.</li>
+<li><strong>Copying results:</strong> streaming files through SSH out of Linux hung. What worked: pack them onto C:
+(<code>/mnt/c/Users/lelan/microduck-runs/</code>), then <code>scp pc:C:/Users/lelan/microduck-runs/&lt;file&gt; .</code></li>
+<li><strong><code>rerun-gamer.local</code> stopped resolving</strong> mid-evening, so <code>ssh pc</code> now uses the address <strong>192.168.1.194</strong>. That
+can change; reserving it in the AT&amp;T gateway (DHCP reservation for <code>50:eb:f6:ca:72:a1</code>) would pin it.</li>
+<li><strong>WSL stops Linux when nothing is connected,</strong> so a laptop SSH session stays open during a run. To be confirmed.</li>
 </ul>
 <p><strong>How it will work:</strong></p>
 <ul>

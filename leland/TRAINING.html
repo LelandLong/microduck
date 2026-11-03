@@ -362,6 +362,88 @@ improving every ~15 seconds as new snapshots load, with sliders for the reward t
 <li><strong>Film any run</strong> the way I made the video above (script kept in this repo&#39;s notes; ask Claude).</li>
 </ol>
 <hr>
+<h2>12. Update, same evening: Pollen&#39;s real training on my gaming PC, and <strong>it walks</strong></h2>
+<p>On 2026-11-03 I set up the gaming PC (see <a href="MACHINES.html"><code>MACHINES.md</code></a>) and ran <strong>Pollen&#39;s own training</strong>
+(<code>microduck_rl</code>, the one that needs an NVIDIA graphics card) for <strong>750 learning rounds</strong>. Everything was
+done from the laptop while the PC sat at its login screen.</p>
+<p><strong>What that was:</strong></p>
+<ul>
+<li><strong>4,096 ducks at once</strong> on the RTX 3060, instead of 32 on the Mac&#39;s processor.</li>
+<li>750 rounds × 4,096 ducks × 24 steps ≈ <strong>74 million steps</strong>, about <strong>410 hours (17 days) of duck practice</strong>,
+in <strong>43 minutes 28 seconds</strong>: ~3.4 s per round, ~800× real time.</li>
+<li>Pollen&#39;s full reward (more than 20 terms, including foot slip and foot clearance) and their <em>curriculum</em>,
+which makes the job harder as the duck gets better.</li>
+</ul>
+<p><strong>How long the ducks stayed up</strong> (an attempt ends at a fall or after 20 s):</p>
+<table>
+<thead>
+<tr>
+<th>Round</th>
+<th>Average time before falling</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0.5 s</td>
+</tr>
+<tr>
+<td>50</td>
+<td>2.7 s</td>
+</tr>
+<tr>
+<td>150</td>
+<td>17.3 s</td>
+</tr>
+<tr>
+<td>750</td>
+<td>19.2 s, almost never falls</td>
+</tr>
+</tbody></table>
+<p><strong>Does it walk? Measured the same way as section 7,</strong> in microduck-lab&#39;s simulator (not the one it trained
+in, which makes the test tougher), told to walk forward for 8 seconds:</p>
+<table>
+<thead>
+<tr>
+<th>Speed asked for</th>
+<th><strong>My PC duck (750 rounds)</strong></th>
+<th>Pollen&#39;s alpha_walking</th>
+<th>My Mac duck (<code>first-gait</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.15 m/s (1.2 m in 8 s)</td>
+<td><strong>0.78 m</strong></td>
+<td>0.01 m</td>
+<td>0.00 m</td>
+</tr>
+<tr>
+<td>0.30 m/s (2.4 m in 8 s)</td>
+<td><strong>1.16 m</strong></td>
+<td>1.06 m</td>
+<td>0.00 m</td>
+</tr>
+<tr>
+<td>0.50 m/s (4.0 m in 8 s)</td>
+<td><strong>2.46 m</strong></td>
+<td>1.70 m</td>
+<td>0.00 m</td>
+</tr>
+</tbody></table>
+<p><strong>It walks, at every speed, without falling, and goes further than Pollen&#39;s own walker in this test.</strong>
+It&#39;s still slower than asked (2.46 m where a perfect duck would cover 4.0 m), which is what more rounds are
+for. Two honest caveats:</p>
+<ul>
+<li>This is one test in one simulator, not the real robot. Pollen&#39;s walker was built for the real robot,
+with things my 750-round duck hasn&#39;t been tested on.</li>
+<li>&quot;Further&quot; isn&#39;t automatically &quot;better&quot;. Next comes <strong>watching</strong> it, then the full duck simulator
+(<code>scripts/duck-sim</code>), where it would run on the real duck software.</li>
+</ul>
+<p><strong>Why the PC duck walks when the Mac duck only stood:</strong> Pollen&#39;s reward and curriculum are tuned to make
+standing still a losing strategy, plus 130× more ducks practising. Section 8 in action.</p>
+<p>The brain itself is <a href="policies/pc-first-750.onnx"><code>policies/pc-first-750.onnx</code></a> (794 KB). It has the same shape
+as Pollen&#39;s: 61 numbers in, 14 motor commands out. Checkpoints (rounds 0, 250, 500, 749) are on the laptop in
+<code>~/microduck-runs/pc/</code>, and on the PC in <code>~/microduck_rl/logs/rsl_rl/</code>. <strong>Training to 4,000 rounds continues from
+round 749; it doesn&#39;t start over.</strong></p>
 <h2>Glossary</h2>
 <table>
 <thead>

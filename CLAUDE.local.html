@@ -94,6 +94,10 @@ Resume later with <code>--agent.resume True --agent.load-run &lt;run dir&gt; --a
 (mjlab <code>rl/config.py</code>). Quoting tip: pipe scripts in with <code>ssh pc &#39;wsl -d Ubuntu-24.04 -- bash -s&#39; &lt;&lt;&#39;EOF&#39;</code>;
 inline <code>|</code> and <code>&quot;</code> get mangled by Windows&#39; cmd.
 GPU power cap optional. No ZeroTier, no remote-control apps on the PC.</li>
+<li><strong>18:31 first-750 finished (43m28s) and WALKS: 0.78/1.16/2.46 m at vx 0.15/0.3/0.5 in 8 s (alpha_walking 0.01/1.06/1.70)</strong>
+in the microduck-lab harness. Copied to <code>~/microduck-runs/pc/</code> + <code>leland/policies/pc-first-750.onnx</code>. Auto-shutdown
+FAILED (shutdown.exe from a nohup&#39;d WSL process); PC shut down by hand 18:39. <code>ssh pc</code> → 192.168.1.194 (mDNS flaky).
+<strong>Never send <code>shutdown /a</code> to check status</strong>: it cancels a pending shutdown.</li>
 <li>Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with <code>caffeinate</code> for 12 h).</li>
 <li><strong>A Claude Cloud session can&#39;t reach the Studio or the PC</strong> (they&#39;re on the home network; the cloud isn&#39;t).
 For hands-on work from the iPhone, use <strong>Remote Control</strong> of the laptop session instead. A cloud session is
