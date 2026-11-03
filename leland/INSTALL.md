@@ -4,6 +4,8 @@ Installed 2026-11-03 on my MacBook Pro (Apple Silicon, macOS 26.6.2), in two rou
 simulator (~6 GB), then the camera and microduck-lab (~3 GB more). **About 9 GB in total.** Finder's
 available space: 69.4 GB before, **63.2 GB after**.
 
+The **Mac Studio** upstairs has the same setup (2026-11-03): see [`MACHINES.md`](MACHINES.md).
+
 ## At a glance
 
 | What | Version | Where | Size | Installed with |

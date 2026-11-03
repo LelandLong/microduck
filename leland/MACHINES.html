@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My three machines for the Microduck</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="MACHINES.md">MACHINES.md</a></div>
+<div class="wrap" id="content">
+<h1>My three machines for the Microduck</h1>
+<p>Set up 2026-11-03. The <strong>laptop</strong> is home base, the <strong>Mac Studio</strong> upstairs is the always-on workhorse,
+and the <strong>gaming PC</strong> will be the NVIDIA training box: switched on only when a run needs it.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MacBook Pro (laptop)</th>
+<th>Mac Studio (upstairs)</th>
+<th>Gaming PC (office)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chip</td>
+<td>M1 Pro (2021)</td>
+<td><strong>M4 Max</strong> (2025)</td>
+<td>Intel i7-12700F + <strong>NVIDIA RTX 3060</strong></td>
+</tr>
+<tr>
+<td>Processor cores</td>
+<td>10 (8 fast, 2 efficient)</td>
+<td><strong>14</strong> (10 fast, 4 efficient)</td>
+<td>12 (20 threads)</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>32 GB</td>
+<td>36 GB</td>
+<td>16 GB</td>
+</tr>
+<tr>
+<td>Free space (Finder)</td>
+<td>63 GB</td>
+<td>136 GB</td>
+<td>large, mostly empty 2nd drive</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>AT&amp;T Wi-Fi</td>
+<td>AT&amp;T, wired</td>
+<td>AT&amp;T, wired</td>
+</tr>
+<tr>
+<td>Name on the network</td>
+<td>Leland&#39;s MacBook Pro</td>
+<td><code>CHS-Leland-Mac-Studio-2025.local</code></td>
+<td><code>RERUN_GAMER</code></td>
+</tr>
+<tr>
+<td>Status</td>
+<td>✅ everything installed</td>
+<td>✅ everything installed</td>
+<td>⏳ not set up yet</td>
+</tr>
+</tbody></table>
+<p><strong>Both Macs must be on the AT&amp;T network</strong> to see each other (not Spectrum).</p>
+<h2>What each machine is for</h2>
+<ul>
+<li><strong>Laptop:</strong> where I sit and work with Claude: editing, quick experiments, watching results.</li>
+<li><strong>Mac Studio:</strong> Mac training runs (2.2× faster than the laptop), long runs while the laptop stays free,
+the simulator on its three screens. Never sleeps.</li>
+<li><strong>Gaming PC:</strong> <strong>Pollen&#39;s official training</strong>, which needs an NVIDIA graphics card. No Mac can do it.</li>
+<li><strong>Hugging Face Jobs</strong> (rented cloud graphics cards, about $0.80 an hour) when I don&#39;t want the PC&#39;s heat and noise.</li>
+</ul>
+<h2>The training race (2026-11-03)</h2>
+<p>The same Mac training run on both Macs, at the same time, both machines quiet: 3 million practice steps,
+32 simulated ducks, using microduck-lab.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Time</th>
+<th>Practice steps per second</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Mac Studio</strong></td>
+<td><strong>2 min 35 s</strong></td>
+<td>~19,400</td>
+</tr>
+<tr>
+<td>Laptop</td>
+<td>5 min 36 s</td>
+<td>~8,950</td>
+</tr>
+</tbody></table>
+<p><strong>The Studio is 2.2× faster.</strong> 16.7 hours of duck practice in under 3 minutes. A 20-million-step run would
+take about 17 minutes on the Studio, about 37 on the laptop. (The laptop&#39;s earlier 9 minutes was slowed by
+an install running at the same time.)</p>
+<h2>Mac Studio: how the laptop connects to it</h2>
+<h3>Using it</h3>
+<pre><code class="language-sh">ssh studio                 # a Terminal on the Studio, no password
+</code></pre>
+<ul>
+<li><strong>See its screens from downstairs:</strong> the <strong>Screen Sharing</strong> app → <code>CHS-Leland-Mac-Studio-2025.local</code>.
+(This already worked: Keller&#39;s Remote Management includes it.)</li>
+<li><strong>Watch Claude&#39;s work upstairs:</strong> Claude can open Terminal windows and the simulator <strong>on the Studio&#39;s
+own screens</strong>, because it logs in as me. Training runs and the simulator are started that way so I can
+watch. (macOS asked once for permission to let it control Terminal; I allowed it.)</li>
+<li>A plain <code>ssh</code> command, with no window, runs out of sight. That&#39;s normal.</li>
+</ul>
+<h3>How it was set up (in case I need to do it again)</h3>
+<ol>
+<li><p><strong>On the Studio:</strong> System Settings → General → Sharing → <strong>Remote Login</strong> on, access limited to my
+account (important: the Studio is also on Keller&#39;s ZeroTier network). Screen Sharing was already on.
+System Settings → Energy: never sleeps, wakes for network access.</p>
+</li>
+<li><p><strong>On the laptop:</strong> a <code>studio</code> shortcut in <code>~/.ssh/config</code> (old copy saved as
+<code>~/.ssh/config.bak-2026-11-03</code>):</p>
+<pre><code>Host studio
+  HostName CHS-Leland-Mac-Studio-2025.local
+  User lelandlong
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+</code></pre>
+<p><code>IdentitiesOnly yes</code> matters: the laptop&#39;s keychain holds 23 keys, and the Studio refuses anyone after 6
+wrong ones. That was the &quot;Too many authentication failures&quot; error.</p>
+</li>
+<li><p><code>ssh-copy-id -i ~/.ssh/id_ed25519.pub studio</code> once, typing the Studio&#39;s password. Never needed again.</p>
+</li>
+<li><p>Studio&#39;s identity (the laptop warns if it ever changes): ED25519 <code>SHA256:jO1/OvVIODfO5bDW8yAI0ew6Q1c6/vI+YSxFxF8fnU0</code>.</p>
+</li>
+</ol>
+<h3>Other Macs that show up on the network</h3>
+<p>Macs named &quot;SAN …&quot; and &quot;CHS …&quot; (other than mine) are colleagues&#39; machines, seen through <strong>ZeroTier</strong>
+(Keller&#39;s private network). They are not mine, and nothing here connects to them.</p>
+<h3>What&#39;s installed on the Studio</h3>
+<p>The same as the laptop (see <a href="INSTALL.html"><code>INSTALL.md</code></a>), about 8 GB:</p>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Homebrew (I ran its installer: it needs my password)</td>
+<td><code>/opt/homebrew</code></td>
+<td>1.4 GB with packages</td>
+</tr>
+<tr>
+<td>uv, Node, gh, GStreamer + libnice-gstreamer (camera)</td>
+<td>via Homebrew</td>
+<td>(included above)</td>
+</tr>
+<tr>
+<td>Rust 1.99.1</td>
+<td><code>~/.rustup</code>, <code>~/.cargo</code></td>
+<td>1.6 GB</td>
+</tr>
+<tr>
+<td>My fork, <code>leland</code> branch (+ <code>upstream</code> = Pollen)</td>
+<td><code>~/microduck</code></td>
+<td>2.1 GB built (in <strong>32 s</strong>, laptop: 51 s)</td>
+</tr>
+<tr>
+<td>Pollen&#39;s microduck_rl (<code>develop</code>, <code>bae39f59</code>)</td>
+<td><code>~/Pollen/microduck_rl</code></td>
+<td>1.1 GB</td>
+</tr>
+<tr>
+<td>microduck-lab (<code>8dad921</code>)</td>
+<td><code>~/microduck-lab</code></td>
+<td>1.8 GB</td>
+</tr>
+<tr>
+<td>uv&#39;s download cache</td>
+<td><code>~/.cache/uv</code></td>
+<td>1.6 GB</td>
+</tr>
+</tbody></table>
+<p><strong>Checked working:</strong> the simulator stood up (control loop 49.9 of 50 times a second, none missed) and
+<code>drive 0.4 0</code> walked the duck <strong>1.31 m</strong>, measured from the simulator&#39;s own position readings.</p>
+<p>The Studio is a <strong>Keller machine</strong>. I&#39;m in Keller IT, with admin rights and permission to install.</p>
+<h2>Gaming PC: the plan (not set up yet)</h2>
+<p><strong>How it will work:</strong></p>
+<ul>
+<li><strong>Switched on from the laptop</strong> (Wake-on-LAN, over the wired home network). Needs two settings checked on
+the PC: one in the BIOS, one on the network adapter.</li>
+<li><strong>Every training run ends by shutting the PC down.</strong> No idling, so less heat and fan noise in the office.</li>
+<li>Optional: <strong>cap the graphics card&#39;s power</strong> (about 170 W → 120 W): much quieter and cooler, perhaps
+10–20% slower.</li>
+<li>Then <code>ssh pc</code> from the laptop, just like the Studio.</li>
+</ul>
+<p><strong>Linux on the PC (WSL2):</strong> Linux runs inside Windows as <strong>one big file</strong>, with no partitioning and no
+choosing Windows or Linux at startup. It goes on the <strong>second drive</strong> (<code>wsl --install --location D:\WSL\…</code>),
+grows as needed, and needs about 20–50 GB. Pollen&#39;s training doesn&#39;t work in plain Windows (Kevin Wood&#39;s
+video shows it failing) but does in WSL2.</p>
+<p><strong>Keeping it from being used as a bot without me knowing:</strong></p>
+<ul>
+<li><strong>Nothing on the internet can reach it.</strong> The AT&amp;T gateway blocks unrequested connections from outside,
+and no port on the router will ever be opened.</li>
+<li><strong>Only my laptop can log in.</strong> Key only, no passwords, and Windows Firewall allows it only from the home network.</li>
+<li><strong>No ZeroTier on the PC</strong>, so Keller&#39;s network can&#39;t reach it.</li>
+<li><strong>No remote-control apps</strong> (TeamViewer, AnyDesk…). Windows Update and Defender stay on.</li>
+<li><strong>I can check anytime:</strong> Claude can list everything running and every outside connection.</li>
+<li><strong>Belt and braces:</strong> the AT&amp;T gateway can block one device&#39;s internet (Device Access controls).</li>
+</ul>
+<p><strong>Known from its System Information (2026-11-03):</strong> Windows 11 Home build 26200 (WSL2 works on Home),
+NVIDIA driver 596.36 (Pollen&#39;s training needs 580+), <strong>&quot;Virtualization-based security: Running&quot;</strong> = the
+processor&#39;s virtualization is already switched on (WSL2 needs it), UEFI + Secure Boot, Windows user <code>lelan</code>.</p>
+<p><strong>Still to check on the PC</strong> (Task Manager → Performance):</p>
+<ul>
+<li><strong>GPU → Dedicated GPU memory</strong> (probably 12 GB). System Information&#39;s &quot;1 MB&quot; is a Windows bug.</li>
+<li><strong>Whether the second drive is an SSD or HDD.</strong> Either works; an SSD is quicker.</li>
+</ul>
+
+</div></body></html>

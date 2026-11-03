@@ -9,6 +9,7 @@ simulator and reinforcement learning before it arrives.
 |---|---|
 | [`../CLAUDE.local.md`](../CLAUDE.local.md) | Running notes: setup, options, costs, decisions. Claude reads it at the start of every session. |
 | ⭐ [`TRAINING.md`](TRAINING.md) | **How a robot duck learns to walk**: my first training run explained, with video |
+| [`MACHINES.md`](MACHINES.md) | **My laptop, Mac Studio and gaming PC**: what each is for, the training race, how they connect |
 | [`INSTALL.md`](INSTALL.md) | What's installed on my Mac, where, how big, how to use and remove it |
 | [`videos.md`](videos.md) | YouTube watch list, in order |
 | [`media/`](media/) | Videos, charts and pictures the notes use |
