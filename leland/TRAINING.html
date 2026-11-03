@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How a robot duck learns to walk</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="TRAINING.md">TRAINING.md</a></div>
+<div class="wrap" id="content">
+<h1>How a robot duck learns to walk</h1>
+<p><em>What &quot;I ran the lab&#39;s starter training, 3 million practice steps, 9 minutes&quot; actually means. Written
+2026-11-03 from my own first training run on my MacBook Pro. Every number here was measured from
+that run&#39;s logs, not taken from a brochure.</em></p>
+<hr>
+<h2>The short version (the one to tell people)</h2>
+<blockquote>
+<p>Nobody programs the duck to walk. Its &quot;brain&quot; is a few hundred thousand numbers that start out
+random. A simulator lets 32 virtual ducks practise at once, much faster than real time, and every
+fiftieth of a second each duck gets a score: points for staying upright and doing what it was
+asked, deductions for flailing. After each short burst of practice, the computer nudges the
+numbers towards whatever scored better than expected. Repeat a few hundred times and behaviour
+appears that nobody wrote.</p>
+<p>My first run: <strong>9 minutes on a laptop = 16.7 hours of duck practice, about 29,000 attempts.</strong> At
+the start a duck fell over within 0.6 seconds. By the end it stayed up for the whole test.</p>
+<p>The twist: it learned to <strong>stand very well</strong>, not to walk. Standing still turned out to be the
+easiest way to score points. Getting the score right is the real craft.</p>
+</blockquote>
+<hr>
+<h2>1. The duck&#39;s brain is a &quot;policy&quot;</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What it is</td>
+<td>A small neural network: a function that takes numbers in and gives numbers out</td>
+</tr>
+<tr>
+<td>How often it runs</td>
+<td><strong>50 times a second</strong></td>
+</tr>
+<tr>
+<td>Numbers in (61)</td>
+<td>how the trunk is rotating and tilting, where each of the 14 joints is and how fast it&#39;s moving, what it did last time, and the <strong>command</strong>: how fast to walk, turn, and where to point the head</td>
+</tr>
+<tr>
+<td>Numbers out (14)</td>
+<td>a target angle for each of the 14 motors</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>61 → 512 → 256 → 128 → 14: four layers, <strong>197,896 numbers</strong> (&quot;weights&quot;), a 775 KB file (<code>policy.onnx</code>)</td>
+</tr>
+</tbody></table>
+<p>The network&#39;s <em>shape</em> is fixed. Training only changes those 197,896 numbers. Before training they&#39;re
+random, so the duck twitches and collapses. After training, the same arithmetic happens to produce
+balance.</p>
+<p>An analogy for Swift people: it&#39;s a pure function <code>(SensorReading) -&gt; MotorTargets</code> with 198,000
+magic constants, and training is a search for good constants.</p>
+<hr>
+<h2>2. What a &quot;step&quot; is</h2>
+<p><strong>One step = 1/50th of a second of duck life.</strong> Each step:</p>
+<ol>
+<li>The simulator reports where the duck&#39;s body and joints are.</li>
+<li>The brain turns that into 14 motor targets.</li>
+<li>The physics engine (MuJoCo) moves the world forward 0.02 seconds: motors push, gravity pulls,
+feet hit the floor.</li>
+<li>The duck gets a score for that moment (section 4).</li>
+</ol>
+<p>The simulated motors are realistic, not idealised: they respond with delay, limited strength and
+friction, modelled from measurements of the real Dynamixel servos (Pollen&#39;s &quot;BAM&quot; motor models).</p>
+<hr>
+<h2>3. What &quot;3 million steps in 9 minutes&quot; adds up to</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>My run (<code>first-gait</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total steps</td>
+<td>3,006,464</td>
+</tr>
+<tr>
+<td>Duck time that represents</td>
+<td>3,006,464 × 0.02 s = <strong>60,129 s = 16.7 hours</strong></td>
+</tr>
+<tr>
+<td>Wall-clock time</td>
+<td>522 s = <strong>8.7 minutes</strong></td>
+</tr>
+<tr>
+<td>Speed-up</td>
+<td><strong>≈ 115 × faster than real time</strong></td>
+</tr>
+<tr>
+<td>Ducks practising at once</td>
+<td><strong>32</strong> (each one lived about 31 minutes)</td>
+</tr>
+<tr>
+<td>Attempts</td>
+<td><strong>≈ 29,000.</strong> An attempt ends when the duck falls, or after 20 seconds</td>
+</tr>
+<tr>
+<td>Learning rounds</td>
+<td><strong>367</strong> (section 5)</td>
+</tr>
+<tr>
+<td>Computer</td>
+<td>MacBook Pro, CPU only. No NVIDIA graphics card</td>
+</tr>
+</tbody></table>
+<p>Why so fast? There are no graphics: the ducks aren&#39;t drawn while they practise, only calculated. And
+32 of them run side by side on the Mac&#39;s processor cores.</p>
+<p>For scale, Pollen&#39;s official walker was trained on an NVIDIA GPU with <strong>4,096 ducks at once</strong>. A
+typical run is several hundred to a few thousand learning rounds of 4,096 ducks × 24 steps each:
+roughly <strong>75 to 400 million steps</strong>, 25 to 130 times my 3 million.</p>
+<hr>
+<h2>4. How it knows what &quot;good&quot; is: the reward</h2>
+<p>Every step, each duck earns points from eight rules (the <strong>reward terms</strong>). These are the exact
+rules my run used:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>What earns points</th>
+<th>Start of training</th>
+<th>End</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>track_lin_vel</code></td>
+<td>moving at the commanded speed and direction</td>
+<td>20</td>
+<td>420</td>
+</tr>
+<tr>
+<td><code>track_ang_vel</code></td>
+<td>turning at the commanded rate (and not wobbling)</td>
+<td>0.8</td>
+<td>117</td>
+</tr>
+<tr>
+<td><code>upright</code></td>
+<td>trunk level, not tipping</td>
+<td>21</td>
+<td>690</td>
+</tr>
+<tr>
+<td><code>pose</code></td>
+<td>joints near a natural standing posture</td>
+<td>11</td>
+<td>294</td>
+</tr>
+<tr>
+<td><code>head_pose</code></td>
+<td>head where it was told to look</td>
+<td>48</td>
+<td>608</td>
+</tr>
+<tr>
+<td><code>feet_air_time</code></td>
+<td>each foot spending 0.125–0.3 s in the air: real steps, not shuffles</td>
+<td>10</td>
+<td>14</td>
+</tr>
+<tr>
+<td><code>action_rate_penalty</code></td>
+<td><strong>deduction</strong> for jerky changes between one step and the next</td>
+<td>−83</td>
+<td><strong>−1,061</strong></td>
+</tr>
+<tr>
+<td><code>ang_vel_xy_penalty</code></td>
+<td><strong>deduction</strong> for rocking side to side or front to back</td>
+<td>−18</td>
+<td>−20</td>
+</tr>
+<tr>
+<td><strong>Total per attempt (average)</strong></td>
+<td></td>
+<td><strong>10</strong></td>
+<td><strong>885</strong></td>
+</tr>
+</tbody></table>
+<p>(The numbers are each rule&#39;s points added up over a whole attempt, averaged across attempts at that
+point in training. They grow partly because attempts get longer: more time alive means more steps
+to earn points in.)</p>
+<p>A few things worth noticing:</p>
+<ul>
+<li>Most of the rules use partial credit. Being <em>close</em> to the commanded speed still pays something,
+so a duck standing still while asked to walk slowly still collects some <code>track_lin_vel</code> points.</li>
+<li><code>feet_air_time</code> barely moved, from 10 to 14. The ducks hardly ever lifted a foot. That&#39;s the clue
+for section 8.</li>
+<li>Falling has no explicit penalty. Falling ends the attempt, and a duck on the floor collects
+nothing more, so staying up is worth every point you&#39;d have earned afterwards.</li>
+</ul>
+<hr>
+<h2>5. The learning loop (PPO)</h2>
+<p>The algorithm is <strong>PPO</strong>, Proximal Policy Optimization (OpenAI, 2017). It&#39;s the standard choice for
+robot locomotion. One learning round:</p>
+<ol>
+<li><strong>Practise.</strong> All 32 ducks run for 256 steps (about 5 seconds each): 8,192 moments of experience.
+The brain adds a little random wiggle to its outputs so it tries variations. Without that wiggle
+it could never discover anything new.</li>
+<li><strong>Judge.</strong> A second network, the <strong>critic</strong>, has been learning to predict &quot;from this situation,
+how many points do I usually get from here on?&quot; For each moment, compare what actually happened
+with the critic&#39;s prediction. Better than expected means that action was a good idea; worse
+means it wasn&#39;t. That difference is called the <strong>advantage</strong>.</li>
+<li><strong>Nudge.</strong> Adjust the 197,896 numbers so good-idea actions become a bit more likely and bad ones
+a bit less. Only <em>a bit</em>: PPO caps how far one round can move the brain (&quot;proximal&quot; = stay
+close). Big jumps tend to wreck what it has already learned. It goes over the 8,192 moments 5
+times, in batches.</li>
+<li>Repeat. My run did this <strong>367 times</strong>.</li>
+</ol>
+<p>As training goes on, the random wiggle shrinks: the brain gets more confident and explores less.</p>
+<hr>
+<h2>6. Watch it learn</h2>
+<p>The same duck brain at five moments in my training run, plus Pollen&#39;s official walker for
+comparison. Every tile gets the same instruction: <strong>walk forward at 0.3 m/s</strong>. Each clip is 8
+seconds, and the caption at the bottom says how far the duck has moved.</p>
+<p><video controls loop muted playsinline src="media/first-gait-learning-stages.mp4"></video></p>
+<p><img src="media/first-gait-learning-stages.png" alt="The six stages, last frame"></p>
+<p><em>(<a href="media/first-gait-learning-stages.mp4">video file</a>, if the player above doesn&#39;t show)</em></p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Before any training (motors just hold still)</td>
+<td>collapses at <strong>0.9 s</strong></td>
+</tr>
+<tr>
+<td>500,000 steps (≈ 1.5 min of training)</td>
+<td>stays up the full 8 s, moves 1 cm</td>
+</tr>
+<tr>
+<td>1,000,000 steps (≈ 3 min)</td>
+<td>stays up, 1 cm</td>
+</tr>
+<tr>
+<td>2,000,000 steps (≈ 6 min)</td>
+<td>stays up, 1 cm</td>
+</tr>
+<tr>
+<td>3,000,000 steps (≈ 9 min, finished)</td>
+<td>stays up, 0 cm</td>
+</tr>
+<tr>
+<td><strong>Pollen&#39;s official walker</strong></td>
+<td>stays up, <strong>walks 95 cm</strong></td>
+</tr>
+</tbody></table>
+<p>And the learning curve from the run&#39;s own log: how long a duck lasted per attempt as training went on.</p>
+<p><img src="media/first-gait-learning-curve.png" alt="Seconds before falling, from 0.6 s to 7.3 s over 3 million steps"></p>
+<p>The jump around 1.8 million steps is the brain &quot;getting&quot; balance. During training the attempts are
+harder than in the clips: random pushes, random commands, sensor noise (section 9). That&#39;s why the
+average stays below the 20-second cap even though the test clips never fall.</p>
+<hr>
+<h2>7. How I know it stands rather than walks</h2>
+<ul>
+<li>The lab&#39;s test battery (<code>eval-walk</code>) said <strong>0 falls in 20 attempts</strong>, which sounds great.</li>
+<li>It also said speed tracking was off by <strong>0.23 m/s on average</strong>. That&#39;s roughly the size of the
+commands themselves, which means &quot;basically ignoring them&quot;.</li>
+<li>So I measured directly: asked for 0.15, 0.3 and 0.5 m/s, the trained duck moved <strong>0.00 m</strong> every
+time. Pollen&#39;s walker, through the same test, moved 1.06 m at 0.3 and 1.70 m at 0.5.</li>
+</ul>
+<p>Lesson I&#39;m keeping: <strong>watch or measure the behaviour, don&#39;t trust a single score.</strong></p>
+<hr>
+<h2>8. Why it learned to stand: the most important idea in all of this</h2>
+<p>The duck did exactly what the score rewarded. It just found a strategy I didn&#39;t intend:</p>
+<ul>
+<li><strong>Standing pays reliably.</strong> <code>upright</code>, <code>pose</code> and <code>head_pose</code> pay every step a duck is level and
+still. Those three added up to ~1,600 points at the end.</li>
+<li><strong>Walking is risky.</strong> Lifting a foot risks a fall, and a fall forfeits every future point.</li>
+<li><strong>Moving costs.</strong> <code>action_rate_penalty</code> deducts for jerky movement. At the end it was the single
+largest term, at −1,061. Standing still is the cheapest way to keep that small.</li>
+<li><strong>Partial credit.</strong> Standing still while asked to walk slowly still earns some speed-tracking
+points.</li>
+</ul>
+<p>So &quot;stand perfectly and ignore the speed command&quot; is a <strong>local optimum</strong>: a solution that&#39;s good
+enough, where any small change (taking a wobbly first step) scores worse before it would score
+better. With limited practice, PPO&#39;s small careful nudges don&#39;t get it over that hump.</p>
+<p>This has a name, <strong>reward hacking</strong> (or &quot;specification gaming&quot;): the learner satisfies the letter of
+the reward and not its spirit. It&#39;s the central skill of this field. The algorithm is off the shelf.
+The craft is designing a score that makes the behaviour you want the easiest way to win. That&#39;s what
+the Microduck lets me practise.</p>
+<p>The usual levers, which I can now try:</p>
+<ul>
+<li><strong>More practice</strong>: the official walker saw 25–130× more.</li>
+<li><strong>Pay for stepping more, or penalise jerkiness less early on</strong>. The lab already eases in the
+jerkiness penalty in stages for this reason.</li>
+<li><strong>A curriculum</strong>: teach standing first, then slow walking, then faster.</li>
+</ul>
+<hr>
+<h2>9. Getting from simulation to the real duck</h2>
+<p>A brain trained in a perfect simulator often fails on a real robot: the <strong>sim-to-real gap</strong>. Two
+defences, both switched on in my run:</p>
+<ul>
+<li><strong>Realistic motors.</strong> BAM models of the real servos, so the simulated motors are as weak, slow and
+sticky as the real ones.</li>
+<li><strong>Domain randomisation.</strong> Every attempt varies the duck&#39;s mass (±5%), the motor friction and the
+motor delay, adds sensor noise, and <strong>shoves the duck</strong> (a push of up to 0.3 m/s every 3–6
+seconds). A brain that copes with all of those variations is more
+likely to cope with the one real duck.</li>
+</ul>
+<p>The finished brain is exported as an ONNX file. The real duck runs that exact file 50 times a second.
+In the simulator on my Mac, the same file goes into the real duck software (<code>scripts/duck-sim</code>).</p>
+<hr>
+<h2>10. Ways to explain it to someone</h2>
+<ul>
+<li><strong>&quot;Warmer, colder.&quot;</strong> Like training a dog, if you could only say &quot;good&quot; or &quot;bad&quot; fifty times a
+second, and the dog had 29,000 tries.</li>
+<li><strong>A video game high score.</strong> The duck is a player who knows nothing except that some moves raise
+the score. It plays 16 hours of &quot;don&#39;t fall over&quot; in 9 minutes.</li>
+<li><strong>A toddler, minus the bruises.</strong> Practice in a virtual world where falling costs nothing, then
+bring the skill into the real one.</li>
+<li><strong>The genie problem.</strong> You get exactly what you ask for. Ask for &quot;upright and calm&quot; and you get
+a duck that won&#39;t move.</li>
+</ul>
+<hr>
+<h2>11. What to try next</h2>
+<ol>
+<li><strong>A longer run.</strong> The same command with more steps, e.g. <code>--steps 20_000_000</code> (roughly an hour on
+this Mac). Does it start walking? I don&#39;t know yet, and that&#39;s the experiment.</li>
+<li><strong>Watch training live.</strong> microduck-lab has a browser viewer with a &quot;teach&quot; panel. It shows ducks
+improving every ~15 seconds as new snapshots load, with sliders for the reward terms:
+<code>uv run duck-lab runs/first-gait</code>, then <code>npm run dev</code> in <code>~/microduck-lab/duck-viewer</code>.
+<em>Not tried yet.</em></li>
+<li><strong>Film any run</strong> the way I made the video above (script kept in this repo&#39;s notes; ask Claude).</li>
+</ol>
+<hr>
+<h2>Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Policy</strong></td>
+<td>The duck&#39;s brain: sensor numbers in, motor targets out</td>
+</tr>
+<tr>
+<td><strong>Weights</strong></td>
+<td>The numbers inside the policy that training adjusts</td>
+</tr>
+<tr>
+<td><strong>Step</strong></td>
+<td>One 1/50 s tick: look, decide, physics moves on</td>
+</tr>
+<tr>
+<td><strong>Episode / attempt</strong></td>
+<td>One try, from reset until falling or a 20 s timeout</td>
+</tr>
+<tr>
+<td><strong>Reward</strong></td>
+<td>The score per step; the only thing the duck &quot;wants&quot;</td>
+</tr>
+<tr>
+<td><strong>PPO</strong></td>
+<td>The learning algorithm: practise, judge, nudge a little, repeat</td>
+</tr>
+<tr>
+<td><strong>Critic</strong></td>
+<td>A helper network that predicts expected future points</td>
+</tr>
+<tr>
+<td><strong>Advantage</strong></td>
+<td>How much better or worse an action went than the critic predicted</td>
+</tr>
+<tr>
+<td><strong>Exploration</strong></td>
+<td>The random wiggle that lets the brain discover new moves</td>
+</tr>
+<tr>
+<td><strong>Local optimum</strong></td>
+<td>Good-enough strategy where small changes only make things worse</td>
+</tr>
+<tr>
+<td><strong>Reward hacking</strong></td>
+<td>Winning the score without doing what you meant</td>
+</tr>
+<tr>
+<td><strong>Domain randomisation</strong></td>
+<td>Varying the simulation so the brain copes with the real world</td>
+</tr>
+<tr>
+<td><strong>Sim-to-real gap</strong></td>
+<td>Simulation and reality differ; a brain must survive both</td>
+</tr>
+<tr>
+<td><strong>ONNX</strong></td>
+<td>The portable file format the brain is saved in (like a Core ML model)</td>
+</tr>
+<tr>
+<td><strong>MuJoCo</strong></td>
+<td>The physics engine that simulates the duck</td>
+</tr>
+<tr>
+<td><strong>BAM</strong></td>
+<td>Pollen&#39;s measured models of the real servo motors</td>
+</tr>
+</tbody></table>
+
+</div></body></html>

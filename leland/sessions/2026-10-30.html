@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026-10-30: first session</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="2026-10-30.md">2026-10-30.md</a></div>
+<div class="wrap" id="content">
+<h1>2026-10-30: first session</h1>
+<h2>What we covered</h2>
+<ul>
+<li><strong>Setup handover</strong> (crossfeed message XFD-069): repo cloned, opened in VS Code, crossfeed seat DUCK.
+Key points copied into <code>CLAUDE.local.md</code>.</li>
+<li><strong>Six ways to learn before the duck arrives</strong>, easiest first: browser simulator; Policy Playground
+and Arena; full local simulator (<code>scripts/duck-sim</code>); training my own tricks; building an iPhone
+app; building a replica.</li>
+<li><strong>Option 4, training my own tricks, explained.</strong> A <em>policy</em> is a small neural network: 61 numbers
+in (joint angles, tilt, commanded speed…), 14 motor targets out, 50 times a second. <em>Reinforcement
+learning</em> trains it by trial and error against a <em>reward</em> (a score I design). <em>PPO</em> is the
+algorithm. Thousands of simulated ducks run in parallel on a GPU. The result is exported as ONNX
+and loaded onto the duck. Two routes:<ul>
+<li>Official <code>microduck_rl</code>: needs an NVIDIA GPU, ~1–2 h for a usable walk.</li>
+<li>Community <code>jonathanhawkins/microduck-lab</code>: trains on a Mac CPU in minutes; a prototype for
+trying reward ideas, not for the real robot.</li>
+</ul>
+</li>
+<li><strong>Hugging Face Jobs pricing</strong> (cloud GPU): L4 $0.80/h (microduck_rl&#39;s default), A10G-large $1.50/h,
+A100 $2.50/h; billed per minute; prepaid credit; default 12 h timeout caps a run at $9.60. PRO not
+needed.</li>
+<li><strong>My gaming PC</strong> (ASUS ROG Strix G15CF, i7-12700F, 16 GB RAM, RTX 3060, Windows 11 Home) can do the
+training through <strong>WSL2</strong>. Plan: the Mac stays home base (editing, quick experiments, watching
+results); the PC is a remote-controlled training box; HF Jobs is overflow. <strong>Not installing on the
+PC yet, &quot;soon&quot;.</strong></li>
+<li><strong>YouTube list</strong>: <a href="../videos.html"><code>../videos.md</code></a>; also sent to Apple Notes (&quot;Microduck videos&quot;).</li>
+<li><strong>Kevin Wood&#39;s training video</strong>: confirms WSL2 works for Windows; walking after ~750 iterations.
+Notes: <a href="../video-notes/kevin-wood-microduck-training.html"><code>../video-notes/kevin-wood-microduck-training.md</code></a>.</li>
+<li><strong>Phone access</strong>: Remote Control (<code>/rc</code> in VS Code) drives the local session from the Claude
+iPhone app. Claude Cloud needs the repo on GitHub, which led to the next item.</li>
+<li><strong>GitHub</strong>: forked to <code>LelandLong/microduck</code> (public, my choice). Notes live on the <code>leland</code>
+branch (the fork&#39;s default); <code>main</code> mirrors Pollen. Commits use the GitHub no-reply email.</li>
+</ul>
+<h2>Decisions</h2>
+<ul>
+<li>Public fork, with everything we discuss committed to it.</li>
+<li>PC setup: WSL2 route, later.</li>
+</ul>
+<h2>Still open</h2>
+<ul>
+<li>Browser simulator vs full local simulator first.</li>
+<li>Whether to clone <code>microduck_rl</code> (on the Mac it&#39;s only needed for the local simulator).</li>
+<li>Which of the six options to go deepest on.</li>
+<li>Connect GitHub at claude.ai/code so Claude Cloud can open the fork.</li>
+</ul>
+
+</div></body></html>

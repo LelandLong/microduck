@@ -32,6 +32,15 @@
   day in `leland/sessions/YYYY-MM-DD.md`, reference material in `leland/` (see `leland/README.md`).
 - At the end of each substantive turn: update the notes, **commit on `leland` and push to `origin`**
   (standing authorisation from Leland). Public repo: scrub anything private before committing.
+- **Every `.md` in `leland/` (+ this file) has a sibling `.html`** (Leland, 2026-11-03: raw markdown is
+  "eye strain and brain melt down"). Renderer: `leland/tools/md-render-sibling.mjs`, ported from
+  keller-portal. A local PostToolUse hook runs `--auto` after Edit/Write; edits made via Bash don't
+  trigger it, so **run `node leland/tools/md-render-sibling.mjs --auto` before every commit** (in a
+  cloud session, `npm install` in `leland/tools` first). Commit the `.html` files too.
+- Videos/images for notes go in `leland/media/`. Recipe for the learning-stages video: export each
+  `runs/<run>/checkpoints/model_N_steps.zip` (+ vecnormalize) with `export-walk` from a scratch run
+  dir, film each with the walk env (`train.env_class("microduck","walk")`, domain_rand off, fixed
+  `twist_cmd`), tile with PIL, write mp4 with imageio. Verify motion by distance, not by eval score.
 
 ## Session start
 1. This file, then the upstream `CLAUDE.md`, then the newest `leland/sessions/` log.
@@ -158,4 +167,6 @@
   libnice-gstreamer via brew (cellar 2.2 → 3.0 GB); `DUCK_SIM_CAMERAS=a scripts/duck-sim` → console
   http://127.0.0.1:8080, capture 32 fps, frame grabbed via `duck-a-frame.sock` (UYVY, rotate 90).
   microduck-lab at `~/microduck-lab` (1.9 GB, own pinned Pollen clones inside); first `train-walk`
-  3M steps = 9 min, eval 0/20 falls, lin-vel error 0.23 m/s. Finder available after all: 63.2 GB.
+  3M steps = 9 min, eval 0/20 falls, lin-vel error 0.23 m/s, **but it only STANDS**: 0.00 m at vx 0.15/0.3/0.5
+  (Pollen's alpha_walking through the same harness: 1.06 m / 1.70 m). Explained in `leland/TRAINING.md`.
+  Finder available after all: 63.2 GB.

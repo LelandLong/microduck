@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leland's notes — Microduck (crossfeed seat: DUCK)</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="CLAUDE.local.md">CLAUDE.local.md</a></div>
+<div class="wrap" id="content">
+<h1>Leland&#39;s notes — Microduck (crossfeed seat: DUCK)</h1>
+<blockquote>
+<p><strong>This file is committed</strong> on the <code>leland</code> branch of Leland&#39;s <strong>public</strong> fork
+<code>LelandLong/microduck</code>, so it travels to Claude Cloud sessions. Anyone can read it: never put
+credentials, tokens or private contact details here. Pollen&#39;s <code>CLAUDE.md</code> / <code>AGENTS.md</code> are
+upstream: read and follow them, but never edit them for anything of Leland&#39;s (it would conflict
+with every upstream merge). <code>.claude/</code> (crossfeed hooks + skill) stays local-only via
+<code>.git/info/exclude</code>.</p>
+</blockquote>
+<h2>What this is</h2>
+<ul>
+<li><code>~/microduck</code> is a fork of <strong><code>pollen-robotics/microduck</code></strong> (Apache-2.0), the software for
+Pollen Robotics&#39; Microduck biped. Cloned 2026-10-30, forked to <code>LelandLong/microduck</code> the same day.</li>
+<li>Leland has <strong>pre-purchased a Microduck; delivery is 4–6 months out.</strong> Until it arrives, this seat
+exists to help him <strong>explore, learn and try things in the simulator</strong> (<code>scripts/duck-sim</code>,
+<code>docs/robot/simulation.md</code>) so he is ready on day one.</li>
+<li>The training side (MuJoCo + PPO, the policies the duck runs) is a separate repo,
+<code>pollen-robotics/microduck_rl</code>. It is <strong>not cloned yet</strong>; clone it beside this one if he wants it.</li>
+</ul>
+<h2>Git layout (set up 2026-10-30)</h2>
+<ul>
+<li><code>origin</code> = <code>LelandLong/microduck</code> (his public fork). <code>upstream</code> = <code>pollen-robotics/microduck</code>.</li>
+<li><strong><code>leland</code></strong> = his working branch and the fork&#39;s default branch: upstream code + <code>CLAUDE.local.md</code><ul>
+<li><code>leland/</code> (notes, session logs, video list). <strong><code>main</code></strong> stays a clean mirror of upstream, so a
+fix for Pollen can branch from it later.</li>
+</ul>
+</li>
+<li>Sync with Pollen: <code>git fetch upstream &amp;&amp; git checkout main &amp;&amp; git merge --ff-only upstream/main &amp;&amp; git push origin main &amp;&amp; git checkout leland &amp;&amp; git merge main &amp;&amp; git push origin leland</code>.</li>
+<li>Commits in this repo use his GitHub no-reply email (repo-local <code>user.email</code>), so his personal
+address never appears in the public history.</li>
+</ul>
+<h2>Keeping everything in the repo (Leland&#39;s standing request, 2026-10-30)</h2>
+<ul>
+<li>Leland wants <strong>everything we discuss</strong> in this repo so it is reachable from Claude Cloud.</li>
+<li>Durable facts and decisions go in this file. Longer material goes in <code>leland/</code>: one session log per
+day in <code>leland/sessions/YYYY-MM-DD.md</code>, reference material in <code>leland/</code> (see <code>leland/README.md</code>).</li>
+<li>At the end of each substantive turn: update the notes, <strong>commit on <code>leland</code> and push to <code>origin</code></strong>
+(standing authorisation from Leland). Public repo: scrub anything private before committing.</li>
+<li><strong>Every <code>.md</code> in <code>leland/</code> (+ this file) has a sibling <code>.html</code></strong> (Leland, 2026-11-03: raw markdown is
+&quot;eye strain and brain melt down&quot;). Renderer: <code>leland/tools/md-render-sibling.mjs</code>, ported from
+keller-portal. A local PostToolUse hook runs <code>--auto</code> after Edit/Write; edits made via Bash don&#39;t
+trigger it, so <strong>run <code>node leland/tools/md-render-sibling.mjs --auto</code> before every commit</strong> (in a
+cloud session, <code>npm install</code> in <code>leland/tools</code> first). Commit the <code>.html</code> files too.</li>
+<li>Videos/images for notes go in <code>leland/media/</code>. Recipe for the learning-stages video: export each
+<code>runs/&lt;run&gt;/checkpoints/model_N_steps.zip</code> (+ vecnormalize) with <code>export-walk</code> from a scratch run
+dir, film each with the walk env (<code>train.env_class(&quot;microduck&quot;,&quot;walk&quot;)</code>, domain_rand off, fixed
+<code>twist_cmd</code>), tile with PIL, write mp4 with imageio. Verify motion by distance, not by eval score.</li>
+</ul>
+<h2>Session start</h2>
+<ol>
+<li>This file, then the upstream <code>CLAUDE.md</code>, then the newest <code>leland/sessions/</code> log.</li>
+<li><strong>On the laptop only:</strong> run the crossfeed skill (seat <strong>DUCK</strong>, personal group); credentials
+<code>~/crossfeed/access/crossfeed-DUCK.env</code>, named inline. <strong>In a Claude Cloud session</strong> there is no
+<code>~/crossfeed</code>, no hooks and no skill: skip crossfeed entirely.</li>
+<li>Now and then, sync with Pollen (command above): upstream moves daily.</li>
+<li>(History: XFD-069, the setup handover, was read and marked 2026-10-30; its durable parts are below.)</li>
+</ol>
+<h2>Working with Leland (house rules from his other projects)</h2>
+<ul>
+<li>Plain English, no jargon. Short bullets first, detail after, and <strong>every substantive reply ends
+with a summary</strong>.</li>
+<li>He&#39;s an experienced Swift/iOS developer and knows Apple tooling well. Rust, robotics and
+reinforcement learning are new to him here, so teach those properly without talking down.</li>
+<li>Verify, don&#39;t recall: time comes from <code>date</code>, and nothing is called working until it has been run.</li>
+<li><strong>Never install system-wide software (Homebrew packages, Rust toolchains, Python environments)
+without telling him first</strong> what it is and roughly how big it is.</li>
+</ul>
+<h2>Handover from XFD-069 (copied 2026-10-30)</h2>
+<h3>The Mac (measured by XFD 2026-10-30, re-check before relying on it)</h3>
+<ul>
+<li>Apple Silicon (arm64), macOS 26.6.2, 32 GB RAM, Homebrew 7.0.11, Python 3.11.3.</li>
+<li><strong>Missing:</strong> Rust (<code>rustup</code>/<code>cargo</code>), <code>uv</code>, Docker, GStreamer, git-lfs.</li>
+<li><strong>Disk: quote Finder&#39;s &quot;available&quot; figure, never plain free space</strong> (Leland, 2026-11-03: he relies on
+Finder, and the lower number irritated him). Finder&#39;s figure = <code>volumeAvailableCapacityForImportantUsage</code>
+(69.41 GB on 2026-11-03, matched his Finder exactly). The ~33 GB gap is purgeable space macOS clears on
+demand: mostly <code>~/Library/Caches</code> (24 GB) and local copies of iCloud/OneDrive/Dropbox files (~9 GB).
+Measure it with a Swift <code>URL.resourceValues</code> check, not <code>df</code>.</li>
+</ul>
+<h3>Local simulator notes (from <code>docs/robot/simulation.md</code>; read it yourself)</h3>
+<ul>
+<li><code>scripts/duck-sim</code> runs the real daemons against a MuJoCo body. Commands: <code>duck-sim</code>, <code>status</code>,
+<code>drive</code>, <code>ctl &lt;robotctl args&gt;</code>, <code>monitor</code>, <code>log</code>, <code>down</code>.</li>
+<li>Needs this repo built with cargo plus a <code>microduck_rl</code> checkout with its venv (default
+<code>~/Pollen/microduck_rl</code>, override <code>DUCK_SIM_RL</code>). Camera needs <code>brew install gstreamer libnice-gstreamer</code> and microduck_rl&#39;s <code>develop</code> branch.</li>
+<li><code>duck-sim boot N</code> (multi-duck) needs <code>systemd-nspawn</code>/<code>mmdebstrap</code>: probably Linux-only (unverified).</li>
+<li>microduck_rl says training needs CUDA, but its venv should install on the Mac for <code>duck-body</code> (CPU
+MuJoCo): checked 2026-11-03 against its <code>uv.lock</code>, every package has a macOS arm64 build except
+Linux-only NVIDIA/CUDA packages (skipped on Mac) and BAM (installed from git). Not yet run.</li>
+</ul>
+<h3>Options offered to Leland, easiest first (none picked as of 2026-10-30)</h3>
+<ol>
+<li>Browser simulator, zero install: <a href="https://huggingface.co/spaces/pollen-robotics/microduck-simulator">https://huggingface.co/spaces/pollen-robotics/microduck-simulator</a></li>
+<li>Policy Playground (<a href="https://huggingface.co/spaces/pollen-robotics/microduck-policy-playground">https://huggingface.co/spaces/pollen-robotics/microduck-policy-playground</a>) and
+Arena leaderboard (<a href="https://huggingface.co/spaces/pollen-robotics/microduck-arena">https://huggingface.co/spaces/pollen-robotics/microduck-arena</a>).</li>
+<li>Full local simulator (<code>scripts/duck-sim</code>): Rust + microduck_rl + disk.</li>
+<li>Train his own tricks: official needs CUDA; alternatives are <code>--hf-jobs</code> (paid) or community
+<a href="https://github.com/jonathanhawkins/microduck-lab">https://github.com/jonathanhawkins/microduck-lab</a> (claims Mac training, unverified).</li>
+<li>Build an app: SwiftUI iPhone app over Bluetooth (<code>btd</code>/<code>duckctl</code>) or WebRTC (<code>docs/faq.md</code>, <code>spaces/</code>).</li>
+<li>Build a replica now: e.g. <a href="https://github.com/fanhao375/microduck-replica">https://github.com/fanhao375/microduck-replica</a>,
+<a href="https://github.com/LuwuDynamics/xgoduck_hardware">https://github.com/LuwuDynamics/xgoduck_hardware</a>.</li>
+</ol>
+<ul>
+<li>TypeSafe/Jev (raise when it fits): fits &quot;what should the duck do next&quot; decisions; NOT walking/balance.</li>
+</ul>
+<p><strong>Open decisions:</strong> browser vs. local sim first; whether to clone microduck_rl; which of 1–6.</p>
+<h3>Reading map</h3>
+<p><code>README.md</code>, <code>docs/README.md</code>, <code>docs/faq.md</code>, <code>docs/robot/simulation.md</code>, <code>docs/robot/cheatsheet.md</code>,
+<code>docs/design/architecture.md</code>, <code>docs/project/roadmap.md</code>, and <a href="https://github.com/joeynyc/awesome-microduck">https://github.com/joeynyc/awesome-microduck</a>
+(says first units before Christmas 2026; official policies at <code>pollen-robotics/microduck-policies</code>).</p>
+<h3>Seat gotcha</h3>
+<ul>
+<li>(Laptop only) set the crossfeed resting status with <code>~/crossfeed/set-status.sh</code> <strong>before</strong> writing the final reply.</li>
+</ul>
+<h3>HF Jobs cost for <code>microduck_rl --hf-jobs</code> (researched 2026-10-30)</h3>
+<ul>
+<li>microduck_rl <code>scripts/hf/README.md</code>: default <code>--flavor l4x1</code>, also <code>a10g-large</code> / <code>a100-large</code>;
+default <code>--timeout 12h</code>. Also uploads source + checkpoints to private HF repos, a uv-cache bucket,
+and forwards wandb (optional, <code>--no-wandb</code>). <code>--dry-run</code> prints the job without submitting.</li>
+<li>HF price list (docs/hub/jobs-pricing): L4 $0.80/h, A10G-large $1.50/h, A100 $2.50/h; billed per
+minute; needs a <strong>positive prepaid credit balance</strong>. Default 12 h timeout caps one L4 run at $9.60.</li>
+<li>Not yet known: how fast an L4 trains the duck vs. the README&#39;s &quot;1–2 h for a usable gait&quot;.</li>
+</ul>
+<h3>Leland&#39;s gaming PC (from his System Information screenshots, 2026-10-30)</h3>
+<ul>
+<li>ASUS ROG Strix G15CF desktop, Windows 11 Home, i7-12700F (12 cores/20 threads), 16 GB RAM,
+<strong>NVIDIA RTX 3060</strong> (VRAM not shown; desktop 3060 is usually 12 GB, confirm with <code>nvidia-smi</code>),
+driver 32.0.15.9636 = NVIDIA 596.36.</li>
+<li>He mainly games on it. Wants the <strong>Mac as home base</strong> and the PC as an optimized training step,
+not a daily workstation.</li>
+<li>mjlab (microduck_rl&#39;s engine) officially: training <strong>Linux only</strong>, WSL listed for evaluation only;
+needs Turing+ GPU and driver ≥ 580 (3060 + 596 both qualify). WSL2 training: officially unlisted, but
+Kevin Wood trains Microduck in WSL2 on Windows in his video (see below), so expected to work.</li>
+</ul>
+<h3>YouTube learning list given to Leland (2026-10-30; titles/channels checked, videos not watched)</h3>
+<ul>
+<li>Best channels found: <strong>Pollen Robotics</strong> (official), <strong>Remi Fabre</strong> (Microduck RL/expressive clips),
+<strong>Kevin Wood | Robotics &amp; AI</strong> (Microduck mjlab training on Windows/Linux: ZDvCdIFXANw),
+<strong>DigiKey + Shawn Hymel</strong> 6-part &quot;Reinforcement Learning for Robotics&quot; (MuJoCo + PPO + sim-to-real),
+sentdex G1 walking (FGnAeUXRZ4E).</li>
+<li>Avoid: Lifey Guy, OTOFOOTAGE, Code-Dixa and similar churn channels.</li>
+<li>Leland&#39;s plan as of 2026-10-30: not installing on the PC yet, &quot;soon&quot;.</li>
+</ul>
+<h3>Kevin Wood&#39;s Microduck training video (ZDvCdIFXANw), from the transcript Leland pasted 2026-10-30</h3>
+<ul>
+<li><strong>Native Windows fails</strong> (<code>uv run train</code> → &quot;selected GPUs index out of range&quot;). <strong>WSL2 + Ubuntu works</strong>:
+he trained on Windows via WSL. This answers our &quot;WSL2 unverified&quot; question (for his GPU, not yet ours).</li>
+<li>Steps: <code>wsl --install</code> (PowerShell) → in WSL <code>git clone</code> microduck_rl → <code>uv run train Mjlab-Velocity-Flat-MicroDuck ...</code>.</li>
+<li>First run asks about Weights &amp; Biases; option <strong>3</strong> = don&#39;t visualise (no account needed).</li>
+<li>Default run is <strong>50,000 iterations</strong> (written <code>50_000</code> in code; override with <code>--agent.max_iterations</code>).
+~<strong>3.8 s/iteration</strong> on his (unnamed) GPU → full run ≈ 53 h. Nobody needs the full run:
+<strong>walking already at 750 iterations (~48 min)</strong>, clearly better at 4,000 (~4 h).</li>
+<li>Checkpoints saved every 250 iterations in <code>logs/rsl_rl/&lt;task&gt;/&lt;date&gt;/model_N.pt</code>; watch one mid-training:
+<code>uv run play &lt;task&gt; --checkpoint-file logs/rsl_rl/.../model_750.pt</code>.</li>
+<li>Sim-to-real lesson: the motors are modelled by <strong>BAM</strong> (Better Actuator Models, system identification of the
+Dynamixel servos); friction is the usual difference between a good and a bad policy.</li>
+</ul>
+<h3>Disk budget for a full Mac setup (measured/estimated 2026-11-03)</h3>
+<ul>
+<li>Available (Finder&#39;s figure): <strong>69.4 GB</strong>. Already present: Homebrew (2.2 GB cellar), Node.</li>
+<li>Core local simulator ≈ <strong>8–10 GB</strong>: Rust toolchain ~1.5 GB (est.); this repo&#39;s build (595 crates,
+debug <code>target/</code>) ~4–6 GB (est., grows; <code>cargo clean</code> reclaims); uv + Python 3.12 ~0.1 GB;
+microduck_rl repo + venv ~1.5–2 GB (<strong>measured: 0.34 GB of Mac downloads</strong>, ~3–4x unpacked).</li>
+<li>Optional: camera = GStreamer + libnice-gstreamer, <strong>58 new Homebrew packages</strong> (incl. GTK 3/4, a
+second Python) ~1.5–2.5 GB (est.); microduck-lab ~3 GB (its README).</li>
+<li>Everything ≈ <strong>13–16 GB</strong>, leaving ~53 GB. Not needed on the Mac: Docker, CUDA, git-lfs, multi-duck <code>boot</code>.</li>
+</ul>
+<h3>Installed on the Mac (2026-11-03) — <strong>the local simulator works</strong></h3>
+<ul>
+<li>Rust 1.99.1 via rustup (<code>~/.rustup</code> 1.3 GB, <code>~/.cargo</code> 0.3 GB; shell needs <code>. &quot;$HOME/.cargo/env&quot;</code>),
+<code>uv</code> 0.13.7 via Homebrew, <code>~/Pollen/microduck_rl</code> + <code>.venv</code> (1.2 GB), uv cache 1.2 GB,
+this repo&#39;s <code>target/</code> 2.0 GB (daemons built in 51 s). <strong>≈ 6 GB total</strong>, less than the 8–10 GB estimate.</li>
+<li><code>scripts/duck-sim</code> ran first time: MuJoCo window, duck stood up, loop 50.0/50 Hz, 0 missed ticks.
+Policies fetched automatically. Full write-up for Leland: <code>leland/INSTALL.md</code>.</li>
+<li><strong><code>drive</code> with no args does NOT walk</strong> (I wrongly reported it did: I only checked it was still
+standing). Default vx 0.15 is below the current walking policy&#39;s effective threshold (~0.25):
+measured 0.15 → 6 mm in 4 s, 0.20 → 8 mm, 0.30 → 45 cm, 0.50 → 82 cm. Use <code>drive 0.4 0</code>.
+Likely a stale script default worth reporting to Pollen.</li>
+<li><strong>Lesson: verify motion by measuring it.</strong> The body&#39;s TCP port (7801) answers
+<code>{&quot;op&quot;:&quot;hello&quot;,&quot;protocol&quot;:1,&quot;joints&quot;:15}</code> then <code>{&quot;op&quot;:&quot;read&quot;}</code> with <code>trunk</code> [x,y,z]; compare before/after.</li>
+<li><strong>Round 2, same day: camera + microduck-lab installed and verified.</strong> GStreamer 1.28.8 +
+libnice-gstreamer via brew (cellar 2.2 → 3.0 GB); <code>DUCK_SIM_CAMERAS=a scripts/duck-sim</code> → console
+<a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a>, capture 32 fps, frame grabbed via <code>duck-a-frame.sock</code> (UYVY, rotate 90).
+microduck-lab at <code>~/microduck-lab</code> (1.9 GB, own pinned Pollen clones inside); first <code>train-walk</code>
+3M steps = 9 min, eval 0/20 falls, lin-vel error 0.23 m/s, <strong>but it only STANDS</strong>: 0.00 m at vx 0.15/0.3/0.5
+(Pollen&#39;s alpha_walking through the same harness: 1.06 m / 1.70 m). Explained in <code>leland/TRAINING.md</code>.
+Finder available after all: 63.2 GB.</li>
+</ul>
+
+</div></body></html>

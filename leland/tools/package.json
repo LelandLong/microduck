@@ -1,0 +1,6 @@
+{
+  "name": "leland-notes-tools",
+  "private": true,
+  "description": "Renders leland/**/*.md to sibling .html (md-render-sibling.mjs)",
+  "dependencies": { "marked": "18.1.1" }
+}

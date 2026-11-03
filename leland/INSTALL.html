@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What's installed on my Mac for the Microduck</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="INSTALL.md">INSTALL.md</a></div>
+<div class="wrap" id="content">
+<h1>What&#39;s installed on my Mac for the Microduck</h1>
+<p>Installed 2026-11-03 on my MacBook Pro (Apple Silicon, macOS 26.6.2), in two rounds: the core
+simulator (~6 GB), then the camera and microduck-lab (~3 GB more). <strong>About 9 GB in total.</strong> Finder&#39;s
+available space: 69.4 GB before, <strong>63.2 GB after</strong>.</p>
+<h2>At a glance</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Version</th>
+<th>Where</th>
+<th>Size</th>
+<th>Installed with</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rust toolchain (compiler <code>rustc</code>, build tool <code>cargo</code>, manager <code>rustup</code>)</td>
+<td>Rust 1.99.1, rustup 1.29.3</td>
+<td><code>~/.rustup</code>, <code>~/.cargo</code></td>
+<td>1.3 GB + 0.3 GB</td>
+<td>official installer from rustup.rs</td>
+</tr>
+<tr>
+<td><code>uv</code> (Python package and version manager)</td>
+<td>0.13.7</td>
+<td><code>/opt/homebrew/Cellar/uv</code></td>
+<td>34 MB</td>
+<td><code>brew install uv</code></td>
+</tr>
+<tr>
+<td>Python for the training repo</td>
+<td>3.12.16</td>
+<td><code>~/.local/share/uv/python</code></td>
+<td>70 MB</td>
+<td><code>uv</code>, automatically</td>
+</tr>
+<tr>
+<td><strong>microduck_rl</strong>, Pollen&#39;s training repo</td>
+<td>branch <code>develop</code>, commit <code>bae39f59</code></td>
+<td><code>~/Pollen/microduck_rl</code></td>
+<td>1.2 GB (1.1 GB is its <code>.venv</code>)</td>
+<td><code>git clone</code> + <code>uv sync</code></td>
+</tr>
+<tr>
+<td>uv&#39;s download cache</td>
+<td></td>
+<td><code>~/.cache/uv</code></td>
+<td>1.2 GB</td>
+<td><code>uv</code>, automatically</td>
+</tr>
+<tr>
+<td>The duck&#39;s software, built for the Mac</td>
+<td>0.18.3</td>
+<td><code>~/microduck/target</code></td>
+<td>2.0 GB</td>
+<td><code>cargo build</code> (51 s)</td>
+</tr>
+<tr>
+<td>The simulator&#39;s state, logs and the official policies</td>
+<td></td>
+<td><code>~/.cache/duck-sim</code></td>
+<td>~20 MB</td>
+<td><code>scripts/duck-sim</code>, on first run</td>
+</tr>
+<tr>
+<td><strong>GStreamer</strong> + <strong>libnice-gstreamer</strong> (video for the simulated camera)</td>
+<td>1.28.8, 0.1.24</td>
+<td><code>/opt/homebrew</code> (+ ~60 dependencies)</td>
+<td>~0.8 GB</td>
+<td><code>brew install gstreamer libnice-gstreamer</code></td>
+</tr>
+<tr>
+<td><strong>microduck-lab</strong> (community: training on the Mac, no NVIDIA GPU)</td>
+<td>commit <code>8dad921</code></td>
+<td><code>~/microduck-lab</code></td>
+<td>1.9 GB</td>
+<td><code>git clone</code> + its <code>./scripts/setup.sh</code></td>
+</tr>
+</tbody></table>
+<p>Nothing went into system folders. Everything except the Homebrew packages (<code>uv</code>, GStreamer) is inside
+my home folder.</p>
+<h2>What each piece is for</h2>
+<ul>
+<li><p><strong>Rust</strong>: the language the duck&#39;s software (<code>robotd</code>, <code>robotctl</code> and the rest) is written in.
+<code>cargo</code> compiles it. <code>rustup</code> keeps Rust up to date (<code>rustup update</code>).</p>
+</li>
+<li><p><strong>uv</strong>: installs Python and the Python libraries a project needs, kept inside that project (its
+<code>.venv</code> folder), so nothing clashes with my other Python installs.</p>
+</li>
+<li><p><strong>microduck_rl</strong>: Pollen&#39;s training repo. The simulator uses it for:</p>
+<ul>
+<li><code>duck-body</code>, the physics model of the duck (MuJoCo) that the real software drives</li>
+<li>the scenes (floors, rooms)</li>
+<li>the ONNX Runtime library that runs the duck&#39;s neural-network policies on the Mac</li>
+</ul>
+<p>It&#39;s also where training happens, but that needs an NVIDIA GPU, so not on this Mac.</p>
+</li>
+<li><p><strong><code>~/microduck/target</code></strong>: the compiled duck software. Safe to delete with <code>cargo clean</code>; the next
+<code>scripts/duck-sim</code> rebuilds it.</p>
+</li>
+<li><p><strong><code>~/.cache/duck-sim</code></strong>: the running duck&#39;s logs, sockets, config, and the 10 official policies
+(<code>alpha_walking.onnx</code>, <code>alpha_stand.onnx</code>, <code>roulade.onnx</code>, …) downloaded from the Hugging Face Hub.</p>
+</li>
+</ul>
+<h2>Changes to my shell setup</h2>
+<p>The Rust installer added one line, <code>. &quot;$HOME/.cargo/env&quot;</code>, to <code>~/.zshenv</code>, <code>~/.profile</code> and
+<code>~/.bash_profile</code>, so <code>cargo</code> and <code>rustc</code> work in every new Terminal window. Nothing else changed.</p>
+<h2>Using the simulator</h2>
+<p>From <code>~/microduck</code> in Terminal:</p>
+<pre><code class="language-sh">scripts/duck-sim                    # start: MuJoCo window opens, duck stands up
+scripts/duck-sim drive 0.4 0        # walk forward 8 s   ← give a speed! see below
+scripts/duck-sim drive 0.4 0.5      # walk while turning
+scripts/duck-sim drive 0 0.8        # turn on the spot
+scripts/duck-sim ctl robot do roulade   # forward roll
+scripts/duck-sim status             # is it healthy and standing?
+scripts/duck-sim monitor            # live joints and sensors
+scripts/duck-sim log                # the daemon&#39;s log (Ctrl-C to leave)
+scripts/duck-sim down               # stop everything, close the window
+</code></pre>
+<p>In the MuJoCo window: drag to rotate the view, scroll to zoom.</p>
+<h3>⚠️ <code>drive</code> with no numbers does nothing visible</h3>
+<p><code>scripts/duck-sim drive</code> defaults to speed 0.15, and today&#39;s walking policy treats anything below
+about 0.25 as &quot;stand still&quot;. Measured 2026-11-03, 4 seconds at each speed:</p>
+<table>
+<thead>
+<tr>
+<th>speed</th>
+<th>distance</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.15 (default)</td>
+<td>6 mm</td>
+<td>stands</td>
+</tr>
+<tr>
+<td>0.20</td>
+<td>8 mm</td>
+<td>stands</td>
+</tr>
+<tr>
+<td>0.30</td>
+<td>45 cm</td>
+<td>walks</td>
+</tr>
+<tr>
+<td>0.50</td>
+<td>82 cm</td>
+<td>walks</td>
+</tr>
+</tbody></table>
+<p>So always give a speed of 0.3 or more. (The script&#39;s default is probably older than the current
+policy; worth telling Pollen.)</p>
+<h2>How I checked it works (2026-11-03)</h2>
+<ul>
+<li><code>scripts/duck-sim</code> started everything first time: duck stood up, control loop at 50.0 of 50 Hz.</li>
+<li>Walking checked by <strong>measuring the duck&#39;s position in the simulation</strong>, not just asking it if it
+was OK (table above).</li>
+</ul>
+<h2>The simulated camera</h2>
+<p>Start the duck with its camera on:</p>
+<pre><code class="language-sh">scripts/duck-sim down
+DUCK_SIM_CAMERAS=a scripts/duck-sim     # &quot;duck-a can see — console at http://127.0.0.1:8080&quot;
+</code></pre>
+<p>Then open <strong><a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a></strong> in a browser: the same console page a real robot serves, with
+the duck&#39;s camera view. Checked 2026-11-03: capturing at 32 fps (target 30), console page loads,
+and a frame grabbed from the camera socket shows the floor in front of the duck
+(<code>images/duck-eye-2026-11-03.png</code>).</p>
+<p>GStreamer prints a screen of warnings (Python bindings, GTK 3 and GTK 4 both present). They are
+about pieces the duck doesn&#39;t use and can be ignored.</p>
+<h2>microduck-lab: training on the Mac</h2>
+<p>A community project (<code>jonathanhawkins/microduck-lab</code>), not Pollen&#39;s. It trains walking policies on the
+Mac&#39;s CPU with 32 simulated ducks instead of thousands on a GPU. It&#39;s for trying out reward ideas, not
+for producing a policy for the real robot. Its setup put <strong>its own pinned copies</strong> of Pollen&#39;s
+<code>microduck</code> and <code>microduck_rl</code> inside <code>~/microduck-lab</code>, separate from mine.</p>
+<p>From <code>~/microduck-lab/microduck_local</code>:</p>
+<pre><code class="language-sh">uv run train-walk --envs 32 --steps 3_000_000 --run-name first-gait   # train
+uv run eval-walk runs/first-gait/policy.onnx                          # test it
+uv run duck-lab --world pitch          # the simulated room; then, in ../duck-viewer: npm run dev
+</code></pre>
+<p><strong>My first training run (2026-11-03):</strong> 3 million steps took <strong>9 minutes</strong> (the camera install was
+running at the same time). It learned to <strong>stand</strong>, rock-steady, but <strong>not to walk</strong>: 0 falls in the
+lab&#39;s test battery, yet 0.00 m moved when asked to walk. The whole story, with video:
+<a href="TRAINING.html"><code>TRAINING.md</code></a>. The policy is in <code>~/microduck-lab/microduck_local/runs/first-gait/policy.onnx</code>.</p>
+<p>Setup ran its self-tests: 56 passed, 1 skipped. A <code>libc++abi … recursive_mutex</code> crash message
+appeared as the test program exited, after the results; it didn&#39;t affect anything.</p>
+<h2>Readable HTML versions of these notes</h2>
+<p>Every <code>.md</code> in <code>leland/</code> (and <code>CLAUDE.local.md</code>) has a dark-theme <code>.html</code> twin beside it. Open the
+<code>.html</code> in a browser. They&#39;re regenerated by <code>node leland/tools/md-render-sibling.mjs --auto</code> (a
+Claude Code hook runs it after every edit). Ported from keller-portal; needs <code>npm install</code> once in
+<code>leland/tools</code> (<code>marked</code>, ~1 MB).</p>
+<h2>Not installed</h2>
+<p>Not needed on a Mac at all: Docker, CUDA, git-lfs, multi-duck <code>boot</code> mode (Linux only).</p>
+<h2>Removing it all</h2>
+<pre><code class="language-sh">scripts/duck-sim down
+rm -rf ~/.cache/duck-sim ~/Pollen/microduck_rl ~/microduck-lab ~/.cache/uv ~/.local/share/uv ~/microduck/target
+rustup self uninstall          # removes ~/.rustup, ~/.cargo and the shell lines
+brew uninstall uv gstreamer libnice-gstreamer &amp;&amp; brew autoremove   # autoremove: the ~60 dependencies
+</code></pre>
+
+</div></body></html>

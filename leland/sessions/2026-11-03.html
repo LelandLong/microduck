@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026-11-03: Mac disk budget</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="2026-11-03.md">2026-11-03.md</a></div>
+<div class="wrap" id="content">
+<h1>2026-11-03: Mac disk budget</h1>
+<h2>Question</h2>
+<p>If we install everything I&#39;d want on the Mac, how much space does it take?</p>
+<h2>Answer (see &quot;Disk budget&quot; in <code>CLAUDE.local.md</code>)</h2>
+<ul>
+<li>Available now: <strong>69.4 GB</strong> (Finder&#39;s figure; corrected below).</li>
+<li><strong>Core local simulator ≈ 8–10 GB</strong>: Rust, this repo built, <code>uv</code> + Python, <code>microduck_rl</code> with its
+Python libraries.</li>
+<li><strong>Optional extras</strong>: simulated camera (GStreamer, ~1.5–2.5 GB, 58 Homebrew packages) and
+microduck-lab for Mac training experiments (~3 GB).</li>
+<li><strong>Everything ≈ 13–16 GB</strong>, leaving ~53 GB.</li>
+<li>Good news found on the way: every Python package the training repo needs has a Mac build (the
+NVIDIA-only ones are skipped on a Mac), so the simulator&#39;s body should install here. Not yet run.</li>
+</ul>
+<h2>Still open</h2>
+<ul>
+<li>Same as 2026-10-30. Nothing installed yet.</li>
+</ul>
+<h2>Correction: which free-space number to use</h2>
+<ul>
+<li>I first quoted 36.5 GB (plain free space). Finder says 69.42 GB. <strong>Finder&#39;s number is the right one.</strong></li>
+<li>It is the figure macOS gives apps that install things, measured at 69.41 GB, the same as Finder.</li>
+<li>The ~33 GB difference is space macOS empties on its own when an app needs room: app caches
+(~24 GB in <code>~/Library/Caches</code>) and local copies of iCloud/OneDrive/Dropbox files (~9 GB), which go
+back to &quot;download on demand&quot;. Not virtual memory: the 6 GB swap file is already counted as used.</li>
+<li>From now on, disk figures are Finder&#39;s.</li>
+</ul>
+<h2>Installed and running</h2>
+<ul>
+<li>Installed Rust, <code>uv</code>, and Pollen&#39;s training repo (<code>~/Pollen/microduck_rl</code>), and built the duck&#39;s
+software. <strong>About 6 GB in total.</strong></li>
+<li><strong>The simulated duck runs on my Mac.</strong> <code>scripts/duck-sim</code> opened a MuJoCo window and the duck stood
+up: control loop at the full 50 Hz, nothing missed.</li>
+<li><strong>But <code>scripts/duck-sim drive</code> did nothing visible</strong> (my screenshot). Claude had claimed it walked
+without measuring. Measured properly: the default speed 0.15 is too low for the current walking
+policy, which only steps above ~0.25. <strong>Use <code>scripts/duck-sim drive 0.4 0</code>.</strong></li>
+<li>Wrote <code>leland/INSTALL.md</code>: what&#39;s installed, where, sizes, how to use it, how to remove it.</li>
+<li>Next options: the simulated camera (GStreamer), microduck-lab for Mac training experiments, or just
+playing with <code>robotctl</code> commands (<code>docs/robot/cheatsheet.md</code>).</li>
+</ul>
+<h2>Round 2: camera and microduck-lab installed</h2>
+<ul>
+<li><strong>Camera</strong>: GStreamer via Homebrew. Started the duck with <code>DUCK_SIM_CAMERAS=a scripts/duck-sim</code>;
+the console at <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> shows what it sees. Proof: a frame from its head camera,
+<code>../images/duck-eye-2026-11-03.png</code>.</li>
+<li><strong>microduck-lab</strong>: installed in <code>~/microduck-lab</code>, and <strong>I trained my first policy on the Mac</strong>:
+9 minutes, 0 falls in 20 test runs. (Correction below: it stands, it doesn&#39;t walk.)</li>
+<li>Total for everything today: ~9 GB. Finder shows 63.2 GB available.</li>
+<li>Details: <code>../INSTALL.md</code>.</li>
+</ul>
+<h2>Round 3: understanding the training</h2>
+<ul>
+<li>Wrote <strong><a href="../TRAINING.html"><code>../TRAINING.md</code></a></strong>: what a policy, a step, a reward and PPO are, with my
+run&#39;s real numbers. 9 minutes = 16.7 hours of duck practice, ~29,000 attempts, 367 learning rounds.</li>
+<li><strong>Made a video</strong> of my duck brain at five points in training beside Pollen&#39;s walker
+(<code>../media/first-gait-learning-stages.mp4</code>) and a learning-curve chart.</li>
+<li><strong>Plot twist, measured:</strong> my policy learned to <strong>stand, not walk</strong>: 0.00 m moved when asked to walk
+at 0.15, 0.3 or 0.5 m/s. Pollen&#39;s walker moved 1.06 m and 1.70 m through the same test. Standing
+still was the easiest way to score. This is &quot;reward hacking&quot;, and it&#39;s the core skill to learn.</li>
+<li><strong>Notes now have HTML twins</strong> (dark theme, same renderer as keller-portal), auto-regenerated by
+a hook. Open any <code>.html</code> in <code>leland/</code>.</li>
+</ul>
+
+</div></body></html>
