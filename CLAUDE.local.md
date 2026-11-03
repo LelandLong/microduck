@@ -122,6 +122,11 @@
   used as a bot while unattended, fan noise, heat in his office. Reassurance plan: no router port forwards,
   SSH key-only from the home subnet via Windows Firewall, no ZeroTier on it, no remote-control apps,
   Defender + updates on, optional AT&T per-device internet block, optional GPU power cap (~170 → 120 W).
+- From his screenshots 2026-11-03: name **RERUN_GAMER**, Windows user `lelan`, build 26200, UEFI + Secure
+  Boot, BIOS G15CF.301 (2022), **"Virtualization-based security: Running" = CPU virtualization already on**
+  (WSL2 needs it), three screens (5760x1080). VRAM still unknown (msinfo's "1 MB" is a known 4 GB-field
+  bug; use Task Manager → GPU). Has a large, mostly unused 2nd drive: put the WSL2 disk there
+  (`wsl --install --location D:\...`), 20–50 GB needed; SSD or HDD not yet known.
 - He mainly games on it. Wants the **Mac as home base** and the PC as an optimized training step,
   not a daily workstation.
 - mjlab (microduck_rl's engine) officially: training **Linux only**, WSL listed for evaluation only;
@@ -209,6 +214,10 @@
   do script \"…\""'` opens a Terminal window in Leland's logged-in desktop (he granted the Automation
   permission 2026-11-03). Run duck-sim, training and long jobs that way so he can watch upstairs.
   `duck-sim status` straight after launch can say "did not stand up": it's still starting, re-check.
+- **Training race 2026-11-03 16:26** (same `train-walk --envs 32 --steps 3_000_000`, run at the same time,
+  both machines quiet): **Studio 2 min 35 s (154.7 s, ~19,400 steps/s), laptop 5 min 36 s (335.9 s,
+  ~8,950 steps/s): Studio 2.2x faster.** 16.7 h of duck practice in 2.6 min = ~390x real time. The laptop's
+  earlier 9 min was slowed by the camera install running alongside. Runs: `runs/race-studio`, `runs/race-laptop`.
 - Not yet on the Studio: VS Code + Claude Code, crossfeed (asked, unanswered).
 - Steps Leland must do at the Studio once: Sharing → **Remote Login** on (and **Screen Sharing** on);
   note the "Local hostname"; Energy → prevent sleep when display off + wake for network access.

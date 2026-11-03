@@ -102,6 +102,15 @@ Sharing for me), then see how good it is for training.</li>
 The Macs that did show up are work machines reached over ZeroTier, not mine.</li>
 <li>Next: one trip upstairs to switch on Remote Login and Screen Sharing (steps in <code>CLAUDE.local.md</code>), then a
 timed training race between the laptop (M1 Pro) and the Studio.</li>
+<li><strong>Done, same day:</strong> <code>ssh studio</code> works. The Studio (M4 Max, 14 cores, 36 GB, 135.7 GB available) has
+everything the laptop has, and the simulator was checked there: it walked 1.31 m. Claude can open windows on
+the Studio&#39;s screens, so I can watch upstairs.</li>
+<li><strong>Training race:</strong> the same 3-million-step run on both machines at once. <strong>Studio 2 min 35 s, laptop 5 min 36 s:
+the Studio is 2.2x faster.</strong> That&#39;s 16.7 hours of duck practice in under 3 minutes.</li>
+<li><strong>PC plan:</strong> Claude wakes it remotely and every training run turns it off at the end. Linux (WSL2) goes in as
+one growable file on the 2nd drive, no partitioning. It can&#39;t be reached from the internet, only my laptop&#39;s key
+can log in, and there are no remote-control apps. Still to check on the PC: GPU memory and whether the 2nd
+drive is an SSD (both in Task Manager → Performance).</li>
 </ul>
 
 </div></body></html>

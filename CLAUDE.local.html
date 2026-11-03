@@ -166,6 +166,11 @@ network-adapter setting, it&#39;s wired) and every training run <strong>shuts it
 used as a bot while unattended, fan noise, heat in his office. Reassurance plan: no router port forwards,
 SSH key-only from the home subnet via Windows Firewall, no ZeroTier on it, no remote-control apps,
 Defender + updates on, optional AT&amp;T per-device internet block, optional GPU power cap (~170 → 120 W).</li>
+<li>From his screenshots 2026-11-03: name <strong>RERUN_GAMER</strong>, Windows user <code>lelan</code>, build 26200, UEFI + Secure
+Boot, BIOS G15CF.301 (2022), <strong>&quot;Virtualization-based security: Running&quot; = CPU virtualization already on</strong>
+(WSL2 needs it), three screens (5760x1080). VRAM still unknown (msinfo&#39;s &quot;1 MB&quot; is a known 4 GB-field
+bug; use Task Manager → GPU). Has a large, mostly unused 2nd drive: put the WSL2 disk there
+(<code>wsl --install --location D:\...</code>), 20–50 GB needed; SSD or HDD not yet known.</li>
 <li>He mainly games on it. Wants the <strong>Mac as home base</strong> and the PC as an optimized training step,
 not a daily workstation.</li>
 <li>mjlab (microduck_rl&#39;s engine) officially: training <strong>Linux only</strong>, WSL listed for evaluation only;
@@ -257,6 +262,10 @@ setup &quot;Ready&quot;), uv cache 1.6 GB, Homebrew cellar 1.4 GB. <strong>Simul
 <li><strong>Showing things on the Studio&#39;s screens:</strong> <code>ssh studio &#39;osascript -e &quot;tell application \&quot;Terminal\&quot; to do script \&quot;…\&quot;&quot;&#39;</code> opens a Terminal window in Leland&#39;s logged-in desktop (he granted the Automation
 permission 2026-11-03). Run duck-sim, training and long jobs that way so he can watch upstairs.
 <code>duck-sim status</code> straight after launch can say &quot;did not stand up&quot;: it&#39;s still starting, re-check.</li>
+<li><strong>Training race 2026-11-03 16:26</strong> (same <code>train-walk --envs 32 --steps 3_000_000</code>, run at the same time,
+both machines quiet): <strong>Studio 2 min 35 s (154.7 s, ~19,400 steps/s), laptop 5 min 36 s (335.9 s,
+~8,950 steps/s): Studio 2.2x faster.</strong> 16.7 h of duck practice in 2.6 min = ~390x real time. The laptop&#39;s
+earlier 9 min was slowed by the camera install running alongside. Runs: <code>runs/race-studio</code>, <code>runs/race-laptop</code>.</li>
 <li>Not yet on the Studio: VS Code + Claude Code, crossfeed (asked, unanswered).</li>
 <li>Steps Leland must do at the Studio once: Sharing → <strong>Remote Login</strong> on (and <strong>Screen Sharing</strong> on);
 note the &quot;Local hostname&quot;; Energy → prevent sleep when display off + wake for network access.
