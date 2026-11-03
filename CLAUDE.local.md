@@ -154,4 +154,8 @@
   Likely a stale script default worth reporting to Pollen.
 - **Lesson: verify motion by measuring it.** The body's TCP port (7801) answers
   `{"op":"hello","protocol":1,"joints":15}` then `{"op":"read"}` with `trunk` [x,y,z]; compare before/after.
-- Not installed yet: camera (GStreamer), microduck-lab.
+- **Round 2, same day: camera + microduck-lab installed and verified.** GStreamer 1.28.8 +
+  libnice-gstreamer via brew (cellar 2.2 → 3.0 GB); `DUCK_SIM_CAMERAS=a scripts/duck-sim` → console
+  http://127.0.0.1:8080, capture 32 fps, frame grabbed via `duck-a-frame.sock` (UYVY, rotate 90).
+  microduck-lab at `~/microduck-lab` (1.9 GB, own pinned Pollen clones inside); first `train-walk`
+  3M steps = 9 min, eval 0/20 falls, lin-vel error 0.23 m/s. Finder available after all: 63.2 GB.
