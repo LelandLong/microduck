@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rust for Swift developers (the short version)</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="RUST.md">RUST.md</a></div>
+<div class="wrap" id="content">
+<h1>Rust for Swift developers (the short version)</h1>
+<p>Written 2026-11-04 for me (Leland): I know Swift well. Rust is the language the duck&#39;s software is
+written in, and it&#39;s now installed on the laptop and the Studio.</p>
+<h2>The short version</h2>
+<ul>
+<li><strong>Rust is Swift&#39;s stricter cousin.</strong> It&#39;s compiled, fast, type-safe, with <code>enum</code>s that carry data,
+<code>Option</code> and <code>Result</code>, and traits that work like protocols. Most Swift ideas carry straight over.</li>
+<li><strong>The one new idea is ownership.</strong> Swift counts references at runtime (ARC). Rust works out
+<em>at compile time</em> who owns each value and when it&#39;s freed. There&#39;s no garbage collector, no ARC,
+and no pauses. That&#39;s why it&#39;s used on a robot that must hit 50 control ticks a second.</li>
+<li><strong>The compiler is strict, and that&#39;s the point.</strong> If a program compiles, whole kinds of bugs are
+ruled out: use-after-free, data races between threads, and forgotten error cases.</li>
+<li><strong>Cargo is SwiftPM, but nicer.</strong> It builds, tests, fetches libraries (&quot;crates&quot;), and runs the linter.</li>
+<li><strong>You don&#39;t need to write Rust to use the duck.</strong> You drive it with <code>duck-sim</code>, <code>robotctl</code> and the
+apps. Rust matters if you want to read <em>how</em> the duck works or change it.</li>
+</ul>
+<h2>What the duck uses Rust for</h2>
+<p>This repo is a Cargo <strong>workspace</strong>: one folder per program or library, about 147,000 lines in all.
+The ones worth knowing:</p>
+<table>
+<thead>
+<tr>
+<th>Crate</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>robotd</code></td>
+<td>The brain stem. It runs the trained policy (the <code>.onnx</code> file) 50 times a second and drives the motors.</td>
+</tr>
+<tr>
+<td><code>mediad</code></td>
+<td>Camera and WebRTC video.</td>
+</tr>
+<tr>
+<td><code>btd</code></td>
+<td>Bluetooth, for phone pairing and control.</td>
+</tr>
+<tr>
+<td><code>robotctl</code>, <code>duckctl</code></td>
+<td>Command-line tools you type at.</td>
+</tr>
+<tr>
+<td><code>updater</code></td>
+<td>Installs new releases on the robot.</td>
+</tr>
+<tr>
+<td><code>kinematics</code>, <code>odometry</code></td>
+<td>Leg geometry, and working out where the duck has walked.</td>
+</tr>
+</tbody></table>
+<p>The <em>training</em> (Python, MuJoCo, PPO) is not Rust. Rust is what runs on the robot. Python is what
+teaches the brain that Rust then runs.</p>
+<h2>Swift → Rust phrasebook</h2>
+<table>
+<thead>
+<tr>
+<th>Swift</th>
+<th>Rust</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>let x = 5</code></td>
+<td><code>let x = 5;</code></td>
+<td>Constant by default, like Swift. Semicolons matter.</td>
+</tr>
+<tr>
+<td><code>var x = 5</code></td>
+<td><code>let mut x = 5;</code></td>
+<td>&quot;mut&quot; = mutable.</td>
+</tr>
+<tr>
+<td><code>func add(a: Int, b: Int) -&gt; Int</code></td>
+<td><code>fn add(a: i64, b: i64) -&gt; i64</code></td>
+<td>Sized number types: <code>i32</code>, <code>u8</code>, <code>f32</code>…</td>
+</tr>
+<tr>
+<td><code>struct</code></td>
+<td><code>struct</code></td>
+<td>Methods go in a separate <code>impl</code> block.</td>
+</tr>
+<tr>
+<td><code>enum</code> with associated values</td>
+<td><code>enum</code></td>
+<td>Same idea, used everywhere.</td>
+</tr>
+<tr>
+<td><code>switch</code></td>
+<td><code>match</code></td>
+<td>Must cover every case, like Swift.</td>
+</tr>
+<tr>
+<td><code>Optional&lt;T&gt;</code>, <code>nil</code></td>
+<td><code>Option&lt;T&gt;</code>: <code>Some(x)</code> / <code>None</code></td>
+<td>No <code>?.</code> chaining sugar for nil, but <code>?</code> works (below).</td>
+</tr>
+<tr>
+<td><code>throws</code> / <code>try</code></td>
+<td><code>Result&lt;T, E&gt;</code>: <code>Ok(x)</code> / <code>Err(e)</code></td>
+<td>Errors are ordinary return values, not exceptions.</td>
+</tr>
+<tr>
+<td><code>try foo()</code></td>
+<td><code>foo()?</code></td>
+<td><code>?</code> means &quot;if this failed, return the error now&quot;.</td>
+</tr>
+<tr>
+<td><code>protocol</code></td>
+<td><code>trait</code></td>
+<td><code>impl Display for Duck</code> ≈ <code>extension Duck: CustomStringConvertible</code>.</td>
+</tr>
+<tr>
+<td>generics <code>&lt;T: Equatable&gt;</code></td>
+<td><code>&lt;T: PartialEq&gt;</code></td>
+<td>Very close.</td>
+</tr>
+<tr>
+<td><code>[Int]</code>, <code>[String: Int]</code></td>
+<td><code>Vec&lt;i64&gt;</code>, <code>HashMap&lt;String, i64&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td><code>String</code> (owned) and <code>&amp;str</code> (borrowed)</td>
+<td>Two string types: see ownership.</td>
+</tr>
+<tr>
+<td><code>print(&quot;hi \(x)&quot;)</code></td>
+<td><code>println!(&quot;hi {x}&quot;);</code></td>
+<td>The <code>!</code> means it&#39;s a <em>macro</em>, code that writes code.</td>
+</tr>
+<tr>
+<td><code>.map { $0 * 2 }</code></td>
+<td><code>.map(|x| x * 2)</code></td>
+<td>Closures use <code>|args|</code>.</td>
+</tr>
+<tr>
+<td>SwiftPM, <code>Package.swift</code></td>
+<td>Cargo, <code>Cargo.toml</code></td>
+<td></td>
+</tr>
+<tr>
+<td>XCTest</td>
+<td><code>#[test]</code> + <code>cargo test</code></td>
+<td>Tests often sit in the same file.</td>
+</tr>
+</tbody></table>
+<h2>A real function from the duck</h2>
+<p>From <a href="../robotd/src/control.rs"><code>robotd/src/control.rs</code></a>. Someone asks the duck to pick something up off the ground:</p>
+<pre><code class="language-rust">pub fn start_ground_pick(&amp;mut self) -&gt; Result&lt;(), &amp;&#39;static str&gt; {
+    if !self.policy.has_ground_pick() {
+        return Err(&quot;no ground-pick policy loaded&quot;);
+    }
+    if let Some(reason) = self.move_blocked() {
+        return Err(reason);
+    }
+    self.ground_pick = Some(0.0);
+    Ok(())
+}
+</code></pre>
+<p>In Swift you&#39;d read it as:</p>
+<ul>
+<li><code>pub fn</code> = <code>public func</code>. <code>&amp;mut self</code> = a <code>mutating func</code>: it&#39;s allowed to change the controller.</li>
+<li><code>-&gt; Result&lt;(), &amp;&#39;static str&gt;</code> = &quot;returns nothing on success, or an error message&quot;. Roughly
+<code>throws</code>, but the error is a value the caller <em>must</em> deal with. The compiler warns if they ignore it.</li>
+<li><code>if let Some(reason) = …</code> is exactly Swift&#39;s <code>if let reason = …</code>.</li>
+<li><code>self.ground_pick = Some(0.0)</code> sets an Optional. It means &quot;a pick has started, 0 seconds in&quot;.</li>
+<li><code>Ok(())</code> at the end, with no <code>return</code> and no semicolon: the last expression is the return value.</li>
+</ul>
+<h2>Ownership in five minutes (the part that&#39;s actually new)</h2>
+<p>Three rules:</p>
+<ol>
+<li><strong>Every value has exactly one owner</strong> (a variable). When the owner goes out of scope, the value is
+freed, right then. Like Swift&#39;s <code>deinit</code>, but certain and free.</li>
+<li><strong>Assigning or passing a value <em>moves</em> it.</strong> <code>let b = a;</code> and now <code>a</code> can&#39;t be used. The compiler
+stops you. (Small simple types like numbers are copied instead.) This is like Swift&#39;s new
+<code>consuming</code> / non-copyable types, but it&#39;s the default for everything.</li>
+<li><strong>You can <em>borrow</em> instead of moving:</strong> <code>&amp;x</code> lends it read-only, <code>&amp;mut x</code> lends it for changing.
+You can have <strong>many readers OR one writer, never both at once.</strong> This is Swift&#39;s &quot;exclusive
+access&quot; rule, enforced fully at compile time.</li>
+</ol>
+<p>The &quot;borrow checker&quot; is the part of the compiler that enforces rule 3. Newcomers spend their first
+weeks arguing with it. It&#39;s almost always pointing at a real problem, usually two parts of the
+program changing the same thing at once.</p>
+<p><strong>Why the two strings?</strong> <code>String</code> is a string you own (you can grow it). <code>&amp;str</code> is a borrowed view
+of someone else&#39;s text. <code>&amp;&#39;static str</code> (in the example above) is text baked into the program that
+lives forever, so it&#39;s safe to hand out anywhere.</p>
+<p><strong>When you really need shared ownership</strong> (like Swift classes), Rust has opt-in versions:
+<code>Rc&lt;T&gt;</code> / <code>Arc&lt;T&gt;</code> are reference counting, which is ARC by hand. <code>Mutex&lt;T&gt;</code> gives safe shared
+changes across threads.</p>
+<h2>Cargo commands you&#39;ll actually type</h2>
+<p>Run these in <code>~/microduck</code>, after <code>. &quot;$HOME/.cargo/env&quot;</code> if the shell can&#39;t find <code>cargo</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cargo build</code></td>
+<td>Compile everything (debug). Output in <code>target/</code>.</td>
+</tr>
+<tr>
+<td><code>cargo build --release</code></td>
+<td>Optimised build, slower to compile and faster to run.</td>
+</tr>
+<tr>
+<td><code>cargo run -p robotctl -- --help</code></td>
+<td>Build and run one program; args after <code>--</code> go to it.</td>
+</tr>
+<tr>
+<td><code>cargo test -p kinematics</code></td>
+<td>Run one crate&#39;s tests.</td>
+</tr>
+<tr>
+<td><code>cargo clippy</code></td>
+<td>The linter, which is very good at teaching Rust style.</td>
+</tr>
+<tr>
+<td><code>cargo fmt</code></td>
+<td>Auto-format, like swift-format.</td>
+</tr>
+<tr>
+<td><code>cargo doc --open</code></td>
+<td>Build HTML docs for the code and every library, and open them.</td>
+</tr>
+<tr>
+<td><code>cargo clean</code></td>
+<td>Delete <code>target/</code> (frees ~2 GB; the next build re-creates it).</td>
+</tr>
+</tbody></table>
+<p><code>scripts/duck-sim</code> runs <code>cargo build</code> for you, which is why it &quot;just worked&quot;.</p>
+<h2>Habits that make Rust easier</h2>
+<ul>
+<li><strong>Read compiler errors in full.</strong> Rust&#39;s are famously helpful, and often end with &quot;help: try this&quot;.</li>
+<li><strong>Use <code>.clone()</code> freely while learning.</strong> It copies a value to dodge the borrow checker. Slightly
+slower and almost always fine. Tidy up later.</li>
+<li><strong><code>unwrap()</code> is Swift&#39;s <code>!</code>.</strong> &quot;I&#39;m sure this isn&#39;t <code>None</code> or <code>Err</code>, crash if I&#39;m wrong.&quot; Fine in
+experiments; the duck&#39;s code avoids it on the robot.</li>
+<li><strong>VS Code:</strong> install the <strong>rust-analyzer</strong> extension. It&#39;s the equivalent of Xcode&#39;s live errors,
+jump-to-definition and autocomplete.</li>
+</ul>
+<h2>Where to learn more</h2>
+<ul>
+<li><strong>&quot;The Rust Programming Language&quot;</strong> (&quot;the Book&quot;), free, and also on your machine: <code>rustup doc --book</code>.
+Chapters 4 (ownership) and 6 (enums and match) are the ones a Swift developer needs most.</li>
+<li><strong>Rustlings</strong>: small exercises you fix until they compile. Good for an evening.</li>
+<li><strong>Rust by Example</strong>: <code>rustup doc --rust-by-example</code>.</li>
+<li>In this repo: <a href="../CONTRIBUTING.html"><code>CONTRIBUTING.md</code></a> (how Pollen builds and tests) and
+<a href="../docs/design/architecture.html"><code>docs/design/architecture.md</code></a> (which daemon does what).</li>
+</ul>
+<h2>Summary</h2>
+<p>Rust ≈ Swift with no ARC. The compiler tracks who owns each value, which makes it fast and safe
+enough to run a walking robot. The Swift ideas (<code>enum</code>, <code>match</code>, <code>Option</code>, <code>Result</code>, traits ≈
+protocols, generics) carry straight over. The new part is ownership and borrowing: one owner, and
+many readers <em>or</em> one writer. Cargo does all the building. You only need it if you want to read or
+change how the duck works.</p>
+
+</div></body></html>
