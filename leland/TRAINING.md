@@ -378,7 +378,28 @@ contact for every body part that isn't named in the collision rule, and the stan
 names. mjlab 1.3 only switched them off by name, so unnamed parts kept their contact by accident. Details and the
 note for David are in [METAL.md](METAL.md). **Pollen will hit the same thing when they upgrade mjlab.**
 
-**What next for stand-up:** retraining on the PC (Pollen's original, correct floor): `standup-750` started 2026-11-04 10:21.
+### Stand-up, retrained on the PC (Pollen's original, correct floor): **it works**
+
+`standup-750`, 2026-11-04 10:21–11:12 (about 50 min, GPU capped at 130 W). Brain:
+[`policies/pc-standup-750.onnx`](policies/pc-standup-750.onnx). Same test as above: 64 ducks start sitting and get
+6 s each.
+
+| Brain | All 64 | From a deep sit | From half up | From nearly standing |
+|---|---|---|---|---|
+| Before training | 0% (they lie **on** the floor now) | | | |
+| 250 rounds | 69% | 10 of 22 | 7 of 15 | 27 of 27 |
+| 500 rounds | **100%** | 25 of 25 | 20 of 20 | 19 of 19 |
+| 750 rounds | **100%** | 20 of 20 | 20 of 20 | 24 of 24 |
+
+![The same two sitting ducks, PC-trained: before, 250 rounds, 750 rounds](media/standup-750-pc.png)
+
+- **Every duck gets up, from every starting position**, by 500 rounds. The Mac-trained duck managed 72%, in a world
+  where it could fall through the floor.
+- Close-up video: [`media/standup-750-pc.mp4`](media/standup-750-pc.mp4). 64 ducks at four stages:
+  [`media/crowd-standup.mp4`](media/crowd-standup.mp4).
+- Not yet tried: in the full duck simulator in place of Pollen's sit-to-stand brain. That needs checking first that
+  `robotd`'s sit-to-stand slot expects this task's inputs.
+
 
 ## Glossary
 
