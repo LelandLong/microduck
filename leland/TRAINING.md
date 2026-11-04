@@ -347,6 +347,12 @@ whose walking physics is fine) and shows 64 of the ducks, each with the brain sa
 - Made with [`tools/report-card/crowd_film.py`](tools/report-card/crowd_film.py) on the Studio. Any task or
   checkpoint works: `CROWD=64 SECONDS=8 uv run python crowd_film.py <task> <run dir> out.mp4 "model_0.pt=Caption" ...`
 
+**Fly-over version:** [`media/fly-walk.mp4`](media/fly-walk.mp4), 24 s, 128 ducks all running the 4,000-round walking
+brain. The camera starts high above the crowd and slowly circles down until it's among them, 1 m from one duck.
+Script: [`tools/report-card/fly_film.py`](tools/report-card/fly_film.py), about 12 min on the Studio's CPU.
+
+![Halfway through the fly-over](media/fly-walk.png)
+
 ### Stand-up (trained on the Studio's Apple GPU)
 
 ![The same two sitting ducks before training, after 250 rounds, and after 750 rounds](media/standup-750-metal.png)
