@@ -11,7 +11,7 @@ and the **gaming PC** will be the NVIDIA training box: switched on only when a r
 | Free space | 63 GB (Finder) | 136 GB (Finder) | C: SSD 124 of 453 GB · D: hard drive 887 of 931 GB |
 | Network | AT&T Wi-Fi | AT&T, wired | AT&T, wired |
 | Name on the network | Leland's MacBook Pro | `CHS-Leland-Mac-Studio-2025.local` | `RERUN_GAMER` |
-| Status | ✅ everything installed | ✅ everything installed | ⏳ not set up yet |
+| Status | ✅ everything installed | ✅ everything installed | ✅ Linux + Pollen training; wake, train, auto-off from the laptop |
 
 **Both Macs must be on the AT&T network** to see each other (not Spectrum).
 
@@ -97,7 +97,7 @@ The same as the laptop (see [`INSTALL.md`](INSTALL.md)), about 8 GB:
 
 The Studio is a **Keller machine**. I'm in Keller IT, with admin rights and permission to install.
 
-## Gaming PC: the plan (being set up)
+## Gaming PC (set up 2026-11-03)
 
 **Found on the network 2026-11-03:** `rerun-gamer.local`, 192.168.1.194, network card `50:eb:f6:ca:72:a1`
 (needed later to wake it remotely). Laptop shortcut: `ssh pc` (user `lelan`, same key as the Studio).
