@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training the Microduck on Apple GPUs: my first open-source project</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="METAL.md">METAL.md</a></div>
+<div class="wrap" id="content">
+<h1>Training the Microduck on Apple GPUs: my first open-source project</h1>
+<p>Started 2026-11-03. <strong>Goal:</strong> make Pollen&#39;s real Microduck training run well on Apple Silicon Macs, by joining and
+helping an existing community effort. <strong>Claude does the engineering; I&#39;m the maintainer:</strong> I decide, review,
+and put my name on what goes out.</p>
+<h2>Why this is hard (the short version)</h2>
+<p>Pollen&#39;s training runs <strong>4,096 ducks at once on an NVIDIA graphics card</strong>. Everything in it already runs on a
+Mac except the physics engine, which is written in NVIDIA&#39;s own GPU language:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What it does</th>
+<th>On Apple&#39;s GPU?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PyTorch</td>
+<td>the duck&#39;s brain and the learning maths</td>
+<td>✅ yes (Apple&#39;s &quot;MPS&quot;)</td>
+</tr>
+<tr>
+<td>rsl_rl</td>
+<td>the PPO learning loop</td>
+<td>✅ yes (plain PyTorch)</td>
+</tr>
+<tr>
+<td>mjlab</td>
+<td>the duck&#39;s world: rewards, curriculum, randomisation</td>
+<td>⚠️ needs small changes</td>
+</tr>
+<tr>
+<td>MuJoCo Warp</td>
+<td>the physics, thousands of ducks in parallel</td>
+<td>❌ NVIDIA only (written in <strong>Warp</strong> → CUDA)</td>
+</tr>
+</tbody></table>
+<p>A full rewrite would be months of expert GPU work. <strong>But someone has already started.</strong></p>
+<h2>What already exists (found 2026-11-03)</h2>
+<ul>
+<li><strong><a href="https://github.com/innate-inc/warp-metal"><code>warp-metal</code></a></strong> by David Dobas (innate-inc), Apache-2.0, started
+September 2026. It adds an Apple GPU device (<code>metal:0</code>) to NVIDIA&#39;s Warp, so Warp&#39;s GPU code compiles to Apple&#39;s
+<strong>Metal</strong> instead of CUDA. Install: <code>pip install warp-metal</code> next to <code>warp-lang</code> 1.17.0. Needs macOS 15+.</li>
+<li>With <strong>two small patches</strong> to MuJoCo Warp and mjlab (his forks, branches <code>metal-3.11</code> and <code>metal</code>, PRs open),
+Pollen&#39;s framework runs on it.</li>
+<li><strong><a href="https://github.com/DavidDobas/microduck_rl/tree/metal"><code>DavidDobas/microduck_rl</code></a>, branch <code>metal</code>: the
+Microduck on a Mac.</strong> Just 4 files changed. It also moves from mjlab 1.3.0 (what Pollen uses) to mjlab 1.6.0,
+so results aren&#39;t a pure like-for-like comparison with Pollen&#39;s.</li>
+<li><strong>His speed figure:</strong> a humanoid robot (Unitree G1) with 1,024 environments takes about 1.0 s per learning round
+on an M5 Pro, against 0.3 s on an RTX 5090. Apple falls further behind with more environments (GPU threadgroup memory).</li>
+<li><strong>Known limits:</strong> Apple GPUs have no 64-bit floating point; some atomic operations aren&#39;t truly atomic; Apple&#39;s
+compiler can miscompile big unrolled matrix maths.</li>
+<li><strong>Hardly anyone has noticed it yet</strong> (1 star when I found it). Other attempts are narrower: MJX on <code>jax-metal</code>
+(reported broken), MLX ports (<a href="https://github.com/RobotFlow-Labs/Mujoco-mlx">RobotFlow-Labs</a>,
+<a href="https://github.com/lucidrains/mujoco_warp">lucidrains</a>).</li>
+</ul>
+<h2>The plan: what I can contribute, in order</h2>
+<ol>
+<li><strong>Install it on my two Macs</strong> and run the same test as the PC. <em>(done 2026-11-03, see log)</em></li>
+<li><strong>Measure:</strong> M4 Max (Studio) and M1 Pro (laptop) against the RTX 3060 on the Microduck, same settings.</li>
+<li><strong>Check correctness:</strong> train to 750 rounds on the Studio and put the result through the same walking test as the
+PC duck (which walked 2.46 m in 8 s at 0.5 m/s). GPU bugs can be silent, and the PC is my trusted reference.</li>
+<li><strong>Report back</strong> to David: what worked, what broke, the numbers. As a GitHub issue on his repo, friendly and
+specific.</li>
+<li><strong>Bring his Microduck branch up to date</strong> with Pollen&#39;s latest <code>develop</code> (it&#39;s 30 commits behind), as a pull
+request to him.</li>
+<li>Later, if it holds up: help get the patches merged upstream, and <strong>suggest to Pollen</strong> an official &quot;train on a
+Mac&quot; option.</li>
+</ol>
+<h2>Roles</h2>
+<ul>
+<li><strong>Me (Leland):</strong> decide what we do and publish; read the write-ups; post or approve anything public (issues,
+pull requests, comments) under my GitHub name; be patient and polite with maintainers.</li>
+<li><strong>Claude:</strong> installs, tests, measures, writes code and fixes, drafts issues and pull requests for me to approve,
+and explains every result in these notes.</li>
+<li><strong>Which Claude:</strong> Claude <strong>Opus 5.5</strong> for most of it (installing, testing, measuring, branch updates, write-ups).
+Claude <strong>Fable 5.1</strong>, Anthropic&#39;s most capable model, for the hardest parts: misbehaving GPU code, subtle numeric
+differences, design decisions. Switch with <code>/model</code> in Claude Code. (There&#39;s no &quot;Fable 5.5&quot;; 5.1 is current.)</li>
+</ul>
+<h2>Honest caveats</h2>
+<ul>
+<li><strong>Checking is the bottleneck, not writing code.</strong> A GPU bug can let the duck train while learning slightly wrong
+physics. Every result gets checked against the PC.</li>
+<li><strong>Upstream may never merge it.</strong> NVIDIA and Google don&#39;t have to accept Metal support. A well-kept fork that
+people use is still valuable.</li>
+<li><strong>Usage:</strong> months of heavy work with Claude uses a lot of my plan&#39;s allowance, Fable especially.</li>
+</ul>
+<h2>GitHub stars, explained</h2>
+<p>A <strong>star</strong> is GitHub&#39;s bookmark-plus-thank-you: it saves the project to my starred list and tells the author (and
+everyone) that people value it. It costs nothing and is the friendliest first contact in open source. <strong>Starred
+2026-11-03:</strong> <code>innate-inc/warp-metal</code> (it went from 1 to 2 stars) and <code>DavidDobas/microduck_rl</code>.</p>
+<h2>Log</h2>
+<h3>2026-11-03: installed on both Macs</h3>
+<ul>
+<li>Cloned <code>DavidDobas/microduck_rl</code> branch <code>metal</code> (commit <code>71fb768</code>) to <code>~/Pollen/microduck_rl-metal</code> on the
+Studio and the laptop, beside Pollen&#39;s original (<code>~/Pollen/microduck_rl</code>, untouched).</li>
+<li><strong>Snag (worth reporting to David):</strong> <code>uv sync</code> failed. The lock file pins a <strong>MuJoCo nightly</strong>,
+<code>3.11.1.dev965888812</code>, from <code>py.mujoco.org</code>, and that server only keeps recent nightlies (now ≥ 3.12.1), so the
+download returns 404. Re-locking fails too, because mjlab 1.6.0 needs <code>mujoco &gt;=3.11.0,&lt;3.12</code>.
+<strong>Fix (local, one line):</strong> pin the <strong>3.11.0 release from PyPI</strong> in <code>[tool.uv] override-dependencies</code>:
+<code>&quot;mujoco==3.11.0&quot;</code>. Then <code>uv lock</code> + <code>uv sync</code> work. To be confirmed: whether MuJoCo Warp&#39;s <code>metal-3.11</code> branch
+needed anything from that nightly.</li>
+<li><strong>Result:</strong> Warp sees the GPU on both Macs: <code>metal:0 &quot;Apple M4 Max&quot;</code> (Studio) and <code>metal:0 &quot;Apple M1 Pro&quot;</code>
+(laptop). <code>warp_metal.status()</code> → active. PyTorch MPS available. <code>.venv</code> 1.1 GB.</li>
+<li>Test command (same as the PC&#39;s, plus the Mac device):
+<code>MJLAB_AGENT_DEVICE=mps WANDB_MODE=disabled uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096 --agent.max-iterations 50</code></li>
+</ul>
+
+</div></body></html>
