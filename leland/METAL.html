@@ -175,5 +175,80 @@ Whole 50-round test: 5 min 9 s including start-up.</p>
 ~50 min on the Studio and ~43 min on the PC). Whole test: 14 min 27 s.</p>
 <p><strong>Next (running):</strong> 750 rounds on the Studio (<code>--agent.run-name metal-750</code>, started 19:21, log <code>~/metal-750.log</code>),
 then the walking test, compared with the PC duck. And the same 50-round test on the laptop&#39;s M1 Pro.</p>
+<h3>2026-11-03 20:10: the Studio-trained duck walks</h3>
+<p>750 rounds on the Studio&#39;s Apple GPU: <strong>48 min 1 s</strong> (PC: 43 min 28 s). Results copied to the laptop
+(<code>~/microduck-runs/studio/</code>); the brain is <a href="policies/studio-metal-750.onnx"><code>policies/studio-metal-750.onnx</code></a>.</p>
+<p><strong>How long ducks stayed up during training</strong> (average, in seconds; an attempt ends at a fall or 20 s):</p>
+<table>
+<thead>
+<tr>
+<th>Round</th>
+<th>PC (RTX 3060, CUDA)</th>
+<th><strong>Studio (M4 Max, Metal)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>50</td>
+<td>2.7</td>
+<td>3.0</td>
+</tr>
+<tr>
+<td>150</td>
+<td>17.3</td>
+<td>16.8</td>
+</tr>
+<tr>
+<td>300</td>
+<td>18.7</td>
+<td>18.2</td>
+</tr>
+<tr>
+<td>500</td>
+<td>18.6</td>
+<td>19.2</td>
+</tr>
+<tr>
+<td>750</td>
+<td>19.2</td>
+<td>18.5</td>
+</tr>
+</tbody></table>
+<p><strong>Walking test</strong> (same harness as TRAINING.md section 12: microduck-lab&#39;s simulator, 8 s, walk forward):</p>
+<table>
+<thead>
+<tr>
+<th>Speed asked for</th>
+<th>PC duck</th>
+<th><strong>Studio duck</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.15 m/s</td>
+<td>0.78 m</td>
+<td><strong>0.53 m</strong></td>
+</tr>
+<tr>
+<td>0.30 m/s</td>
+<td>1.16 m</td>
+<td><strong>1.32 m</strong></td>
+</tr>
+<tr>
+<td>0.50 m/s</td>
+<td>2.46 m</td>
+<td><strong>2.12 m</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Both walk at every speed, neither falls, and they&#39;re in the same range.</strong> Two separately trained ducks always
+differ somewhat (different random starts), so this is the expected kind of difference, not a sign that Metal&#39;s
+physics is wrong. That&#39;s the most important result so far: <strong>the Apple GPU trains a duck that walks, at about
+90% of the RTX 3060&#39;s speed.</strong></p>
+<p>Not yet checked: the same duck in the full duck simulator (<code>scripts/duck-sim</code>), and a like-for-like run (same mjlab
+version, same random seed) to separate &quot;Metal&quot; from &quot;newer mjlab&quot;.</p>
+<p><strong>Draft message to David:</strong> <a href="drafts/warp-metal-issue.html"><code>drafts/warp-metal-issue.md</code></a>. Waiting for my OK before posting.</p>
 
 </div></body></html>

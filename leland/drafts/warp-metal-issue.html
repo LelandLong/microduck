@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Draft: GitHub issue for DavidDobas/microduckrl (not posted, waiting for Leland's OK)</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="warp-metal-issue.md">warp-metal-issue.md</a></div>
+<div class="wrap" id="content">
+<h1>Draft: GitHub issue for DavidDobas/microduck_rl (not posted, waiting for Leland&#39;s OK)</h1>
+<p><strong>Where:</strong> <a href="https://github.com/DavidDobas/microduck_rl/issues/new">https://github.com/DavidDobas/microduck_rl/issues/new</a> (his Microduck <code>metal</code> branch).
+<strong>Title:</strong> Microduck on M4 Max: ~90% of an RTX 3060, and it walks (+ a lockfile fix)</p>
+<hr>
+<p>Hi David, thanks for warp-metal and the Microduck <code>metal</code> branch. I&#39;ve pre-ordered a Microduck and tried your
+branch on two Macs, with a Windows/WSL2 RTX 3060 running Pollen&#39;s <code>develop</code> as a reference. Results below, plus
+one install problem with a one-line fix.</p>
+<p><strong>1. Install: the locked MuJoCo nightly is gone</strong></p>
+<p><code>uv sync</code> on a fresh clone (<code>71fb768</code>) fails with a 404 for
+<code>mujoco-3.11.1.dev965888812</code> from <code>py.mujoco.org</code>. That index now only keeps newer nightlies (≥ 3.12.1),
+and <code>uv lock --upgrade-package mujoco</code> can&#39;t resolve, because mjlab 1.6.0 needs <code>mujoco&gt;=3.11.0,&lt;3.12</code>.
+Pinning the 3.11.0 release from PyPI works for me:</p>
+<pre><code class="language-toml">[tool.uv]
+override-dependencies = [
+    &quot;mujoco==3.11.0&quot;,
+    ...
+]
+</code></pre>
+<p>After <code>uv lock &amp;&amp; uv sync</code>, both Macs show <code>metal:0</code> and <code>warp_metal.status()</code> → <code>(True, &#39;active&#39;)</code>.
+I don&#39;t know if <code>mujoco_warp@metal-3.11</code> relied on anything specific to that nightly. Everything below ran on 3.11.0.</p>
+<p><strong>2. Speed:</strong> <code>Mjlab-Velocity-Flat-MicroDuck</code>, 4,096 envs, <code>MJLAB_AGENT_DEVICE=mps</code></p>
+<table>
+<thead>
+<tr>
+<th>Machine</th>
+<th>Stack</th>
+<th>s / iteration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTX 3060 12 GB (WSL2, Ubuntu 24.04)</td>
+<td>Pollen <code>develop</code> <code>bae39f59</code> (mjlab 1.3, CUDA)</td>
+<td>3.36–3.66</td>
+</tr>
+<tr>
+<td><strong>Mac Studio M4 Max (32-core GPU, 36 GB)</strong></td>
+<td>your <code>metal</code> branch</td>
+<td><strong>3.86–4.05</strong></td>
+</tr>
+<tr>
+<td>MacBook Pro M1 Pro (16-core GPU, 32 GB)</td>
+<td>your <code>metal</code> branch</td>
+<td>13.5–14.7</td>
+</tr>
+</tbody></table>
+<p>macOS 26.6. Not perfectly like-for-like (mjlab 1.3 vs 1.6).</p>
+<p><strong>3. It learns to walk.</strong> 750 iterations on the M4 Max (48 min) vs the 3060 (43 min). Episode length follows the
+same curve (round 150: 840 vs 865 steps; round 750: 924 vs 961). Both exported ONNX policies walk at
+0.15/0.3/0.5 m/s without falling in an independent CPU MuJoCo harness (microduck-lab): M4 Max policy 0.53/1.32/2.12 m
+in 8 s, 3060 policy 0.78/1.16/2.46 m.</p>
+<p>Happy to run anything else that would help (a fixed-seed comparison, a longer run, the full robot stack in
+Pollen&#39;s <code>duck-sim</code>), or to send a PR rebasing the branch onto Pollen&#39;s current <code>develop</code> (30 commits ahead).</p>
+<p>Thanks again!
+— Leland</p>
+
+</div></body></html>
