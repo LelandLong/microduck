@@ -333,6 +333,20 @@ of `drive`:
   has only learnt the basic task. Those extra skills are what a later, longer run has to add before mine could
   replace theirs.
 
+### Many ducks at once: what "4,096 ducks in parallel" looks like
+
+![64 ducks at four stages of training](media/crowd-walk.png)
+
+Video: [`media/crowd-walk.mp4`](media/crowd-walk.mp4) (8 s, 2×2). It uses the Studio's 750-round walking run (Metal,
+whose walking physics is fine) and shows 64 of the ducks, each with the brain saved at that stage.
+
+- **Every duck is asked for something different**: its own random speed and direction, its own random start. That's
+  why they spread out unevenly. Real training runs 4,096 like this at once, and every round they all share one brain,
+  which learns from all of their attempts together.
+- A duck that falls is reset on the spot, as in training, so the early stages show a lot of jumping back to the start.
+- Made with [`tools/report-card/crowd_film.py`](tools/report-card/crowd_film.py) on the Studio. Any task or
+  checkpoint works: `CROWD=64 SECONDS=8 uv run python crowd_film.py <task> <run dir> out.mp4 "model_0.pt=Caption" ...`
+
 ### Stand-up (trained on the Studio's Apple GPU)
 
 ![The same two sitting ducks before training, after 250 rounds, and after 750 rounds](media/standup-750-metal.png)
@@ -364,7 +378,7 @@ contact for every body part that isn't named in the collision rule, and the stan
 names. mjlab 1.3 only switched them off by name, so unnamed parts kept their contact by accident. Details and the
 note for David are in [METAL.md](METAL.md). **Pollen will hit the same thing when they upgrade mjlab.**
 
-**What next for stand-up:** train it on the PC (Pollen's original, correct floor), or fix the Metal branch and retrain.
+**What next for stand-up:** retraining on the PC (Pollen's original, correct floor): `standup-750` started 2026-11-04 10:21.
 
 ## Glossary
 

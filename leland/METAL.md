@@ -171,5 +171,5 @@ to mjlab ≥ 1.4.
 `trunk_collision`), or set `disable_other_geoms=False` on the ground-contact robot's `CollisionCfg`. Either way,
 check it with the same parts list.
 
-Draft comment for warp-metal#10: [`drafts/warp-metal-comment-2.md`](drafts/warp-metal-comment-2.md). **Not posted:
-waiting for my OK.**
+Draft comment for warp-metal#10: [`drafts/warp-metal-comment-2.md`](drafts/warp-metal-comment-2.md). **Posted 2026-11-04 with my OK:**
+[issuecomment-6634458130](https://github.com/innate-inc/warp-metal/issues/10#issuecomment-6634458130).

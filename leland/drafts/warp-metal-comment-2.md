@@ -1,4 +1,4 @@
-# Draft: follow-up comment on innate-inc/warp-metal#10 (NOT POSTED, waiting for Leland's OK)
+# Draft: follow-up comment on innate-inc/warp-metal#10 (POSTED 2026-11-04: https://github.com/innate-inc/warp-metal/issues/10#issuecomment-6634458130)
 
 ---
 

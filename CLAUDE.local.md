@@ -73,8 +73,8 @@
 - **2026-11-04 morning report cards done (TRAINING.md §13):** `walk-4000` walks STRAIGHT (first-750 curved ~70°),
   runs in full `duck-sim`/robotd (swap via a temporary `policies/` dir beside the repo, which duck-sim prefers).
   **Metal branch bug found:** mjlab 1.6 + unnamed geoms → only feet touch the floor in ground-contact tasks, so the
-  Studio StandUp brain is INVALID (walking unaffected). Draft for David `leland/drafts/warp-metal-comment-2.md`, NOT
-  posted (needs Leland's OK). Scripts `leland/tools/report-card/` (StandUp tests run on the Studio, device "cpu").
+  Studio StandUp brain is INVALID (walking unaffected). Comment POSTED on warp-metal#10 2026-11-04.
+  StandUp retraining on the PC (`pc-train start standup-750 750 --task Mjlab-StandUp-Flat-MicroDuck --power 130`, 10:21). Scripts `leland/tools/report-card/` (StandUp tests run on the Studio, device "cpu").
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is

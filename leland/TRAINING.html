@@ -538,6 +538,18 @@ spot, tilt its body on command and get up gracefully from a fall, and it may sim
 has only learnt the basic task. Those extra skills are what a later, longer run has to add before mine could
 replace theirs.</li>
 </ul>
+<h3>Many ducks at once: what &quot;4,096 ducks in parallel&quot; looks like</h3>
+<p><img src="media/crowd-walk.png" alt="64 ducks at four stages of training"></p>
+<p>Video: <a href="media/crowd-walk.mp4"><code>media/crowd-walk.mp4</code></a> (8 s, 2×2). It uses the Studio&#39;s 750-round walking run (Metal,
+whose walking physics is fine) and shows 64 of the ducks, each with the brain saved at that stage.</p>
+<ul>
+<li><strong>Every duck is asked for something different</strong>: its own random speed and direction, its own random start. That&#39;s
+why they spread out unevenly. Real training runs 4,096 like this at once, and every round they all share one brain,
+which learns from all of their attempts together.</li>
+<li>A duck that falls is reset on the spot, as in training, so the early stages show a lot of jumping back to the start.</li>
+<li>Made with <a href="tools/report-card/crowd_film.py"><code>tools/report-card/crowd_film.py</code></a> on the Studio. Any task or
+checkpoint works: <code>CROWD=64 SECONDS=8 uv run python crowd_film.py &lt;task&gt; &lt;run dir&gt; out.mp4 &quot;model_0.pt=Caption&quot; ...</code></li>
+</ul>
 <h3>Stand-up (trained on the Studio&#39;s Apple GPU)</h3>
 <p><img src="media/standup-750-metal.png" alt="The same two sitting ducks before training, after 250 rounds, and after 750 rounds"></p>
 <p>Video: <a href="media/standup-750-metal.mp4"><code>media/standup-750-metal.mp4</code></a>. These are the first two deep-sitting ducks of a
@@ -595,7 +607,7 @@ Studio walking result (METAL.md) stands.</p>
 contact for every body part that isn&#39;t named in the collision rule, and the stand-up model&#39;s body parts have no
 names. mjlab 1.3 only switched them off by name, so unnamed parts kept their contact by accident. Details and the
 note for David are in <a href="METAL.html">METAL.md</a>. <strong>Pollen will hit the same thing when they upgrade mjlab.</strong></p>
-<p><strong>What next for stand-up:</strong> train it on the PC (Pollen&#39;s original, correct floor), or fix the Metal branch and retrain.</p>
+<p><strong>What next for stand-up:</strong> retraining on the PC (Pollen&#39;s original, correct floor): <code>standup-750</code> started 2026-11-04 10:21.</p>
 <h2>Glossary</h2>
 <table>
 <thead>

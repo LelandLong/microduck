@@ -2,7 +2,8 @@
 # Train the Microduck on the gaming PC from the laptop: wake it, train, fetch the result, let it switch itself off.
 #
 #   pc-train wake                         switch the PC on (Wake-on-LAN) and wait until it answers
-#   pc-train start NAME ITERATIONS [--resume RUN CHECKPOINT] [--keep-on] [--power WATTS]
+#   pc-train start NAME ITERATIONS [--task TASK] [--resume RUN CHECKPOINT] [--keep-on] [--power WATTS]
+#                                         TASK defaults to walking (Mjlab-Velocity-Flat-MicroDuck)
 #                                         e.g. pc-train start first-4000 4000 --resume first-750 model_749.pt
 #   pc-train status [NAME]                how far it has got
 #   pc-train wait NAME                    wait for the end, then fetch the result
@@ -57,10 +58,11 @@ case "${1:-}" in
 wake) wake ;;
 start)
     shift; name=$1 iters=$2; shift 2
-    resume_run='' resume_ckpt='' shutdown=1 power=''
+    resume_run='' resume_ckpt='' shutdown=1 power='' task=''
     while [ $# -gt 0 ]; do
         case $1 in
         --resume) resume_run=$2 resume_ckpt=$3; shift 3 ;;
+        --task) task=$2; shift 2 ;;
         --keep-on) shutdown=0; shift ;;
         --power) power=$2; shift 2 ;;
         *) echo "unknown option $1"; exit 2 ;;
@@ -68,8 +70,8 @@ start)
     done
     wake
     job=$(mktemp)
-    printf 'NAME=%s\nITERATIONS=%s\nENVS=4096\nRESUME_RUN=%s\nRESUME_CKPT=%s\nSHUTDOWN=%s\nPOWER_LIMIT=%s\n' \
-        "$name" "$iters" "$resume_run" "$resume_ckpt" "$shutdown" "$power" > "$job"
+    printf 'NAME=%s\nITERATIONS=%s\nENVS=4096\nTASK=%s\nRESUME_RUN=%s\nRESUME_CKPT=%s\nSHUTDOWN=%s\nPOWER_LIMIT=%s\n' \
+        "$name" "$iters" "$task" "$resume_run" "$resume_ckpt" "$shutdown" "$power" > "$job"
     scp -q "$job" pc:"$RUNS/job.env"; rm "$job"
     pc 'powershell -NoProfile -Command "Start-ScheduledTask -TaskName MicroduckTrain"'
     echo "Started '$name': $iters rounds (~$((iters * 35 / 600)) min). $([ $shutdown = 1 ] && echo 'The PC shuts itself down 5 minutes after it ends.')"
@@ -82,5 +84,5 @@ wait)
     ;;
 fetch) fetch "$2" ;;
 off) pc 'shutdown /s /t 0'; echo "Shutting down." ;;
-*) sed -n '2,12p' "$0"; exit 2 ;;
+*) sed -n '2,13p' "$0"; exit 2 ;;
 esac
