@@ -191,5 +191,20 @@ plus <strong>Rough</strong> (uneven ground) and <strong>Backlash</strong> (model
 <li>Official policies shipped with the duck (<code>~/.cache/duck-sim/policies</code>): alpha_walking, alpha_stand,
 alpha_sitstand, alpha_ground_pick, ball_kick_left/right, roller, roller_crouch, roulade, velstand.</li>
 </ul>
+<h2>Round 10: what should the next goal be? (advice, waiting for my decision)</h2>
+<ul>
+<li>The duck arrives with Pollen&#39;s official policies, and they&#39;re updated by releases, so a working duck on day one is
+already covered. Our goal: <strong>be able to train, check and trust any skill on demand</strong>, not a stockpile of policies.</li>
+<li>Why not train everything now and upload it on arrival: Pollen&#39;s code changes daily, so a policy trained months
+early may not fit the robot software it ships with. An untested policy can make a real duck fall. Retrain near
+arrival on Pollen&#39;s latest code; keep the skills and the checking routine ready.</li>
+<li>Each skill is its <strong>own separate policy</strong> (the robot switches between them), so skills are trained separately, one
+at a time, two at once when using both the PC and the Studio.</li>
+<li>Proposed phases: (1) tonight, walking 750 → 4,000 on the PC (quiet 130 W cap, auto-off) + first new skill
+<code>StandUp</code> on the Studio; (2) a &quot;report card&quot; routine: walking test, video, then the full duck simulator; (3) the
+other skills one by one, short run first, long run only if it&#39;s learning; (4) near arrival: retrain on Pollen&#39;s
+latest code with the Backlash (real-gear) variants; on the real duck, official policies first, then ours one at a
+time with the duck held.</li>
+</ul>
 
 </div></body></html>
