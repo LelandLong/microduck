@@ -1,0 +1,86 @@
+#!/bin/bash
+# Train the Microduck on the gaming PC from the laptop: wake it, train, fetch the result, let it switch itself off.
+#
+#   pc-train wake                         switch the PC on (Wake-on-LAN) and wait until it answers
+#   pc-train start NAME ITERATIONS [--resume RUN CHECKPOINT] [--keep-on] [--power WATTS]
+#                                         e.g. pc-train start first-4000 4000 --resume first-750 model_749.pt
+#   pc-train status [NAME]                how far it has got
+#   pc-train wait NAME                    wait for the end, then fetch the result
+#   pc-train fetch NAME                   copy NAME's result to ~/microduck-runs/pc/
+#   pc-train off                          shut the PC down now
+#
+# Set up 2026-11-03; how it works is in leland/MACHINES.md.
+set -euo pipefail
+
+MAC=50:eb:f6:ca:72:a1
+BROADCAST=192.168.1.255
+RUNS='C:/Users/lelan/microduck-runs'      # for scp
+RUNSW='C:\Users\lelan\microduck-runs'   # for Windows commands (type wants backslashes)
+LOCAL=~/microduck-runs/pc
+
+quiet() { grep -v -i -e quantum -e 'may be vulnerable' -e upgraded || true; }
+pc() { ssh -o BatchMode=yes -o ConnectTimeout=5 pc "$@" 2>&1 | tr -d '\r' | quiet; }
+up() { ssh -o BatchMode=yes -o ConnectTimeout=4 pc 'echo up' 2>/dev/null | grep -q up; }
+
+wake() {
+    if up; then echo "PC is already on."; return; fi
+    python3 - "$MAC" "$BROADCAST" <<'EOF'
+import socket, sys
+mac = bytes.fromhex(sys.argv[1].replace(':', ''))
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+for port in (9, 7):
+    s.sendto(b'\xff' * 6 + mac * 16, (sys.argv[2], port))
+EOF
+    echo -n "Magic packet sent; waiting for the PC"
+    for _ in $(seq 1 60); do
+        if up; then echo " ... on."; return; fi
+        echo -n "."; sleep 5
+    done
+    echo; echo "The PC didn't answer within 5 minutes. Is Wake-on-LAN enabled in its BIOS?"; exit 1
+}
+
+status() {
+    local name=${1:-$(pc "type $RUNSW\\job.env" | sed -n 's/^NAME=//p')}
+    pc "type $RUNSW\\$name.status" | sed "s/^/$name: /"
+    pc "powershell -NoProfile -Command \"Get-Content $RUNS/$name.log -Tail 400 | Select-String 'Learning iteration|Mean episode length|ETA' | Select-Object -Last 3 | ForEach-Object { \$_.Line.Trim() }\""
+}
+
+fetch() {
+    mkdir -p "$LOCAL"
+    scp -q pc:"$RUNS/$1.tgz" "$LOCAL/" && scp -q pc:"$RUNS/$1.log" "$LOCAL/" 2>/dev/null || true
+    tar -xzf "$LOCAL/$1.tgz" -C "$LOCAL" && rm "$LOCAL/$1.tgz"
+    echo "Fetched to $LOCAL:"; ls -d "$LOCAL"/*_"$1"
+}
+
+case "${1:-}" in
+wake) wake ;;
+start)
+    shift; name=$1 iters=$2; shift 2
+    resume_run='' resume_ckpt='' shutdown=1 power=''
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --resume) resume_run=$2 resume_ckpt=$3; shift 3 ;;
+        --keep-on) shutdown=0; shift ;;
+        --power) power=$2; shift 2 ;;
+        *) echo "unknown option $1"; exit 2 ;;
+        esac
+    done
+    wake
+    job=$(mktemp)
+    printf 'NAME=%s\nITERATIONS=%s\nENVS=4096\nRESUME_RUN=%s\nRESUME_CKPT=%s\nSHUTDOWN=%s\nPOWER_LIMIT=%s\n' \
+        "$name" "$iters" "$resume_run" "$resume_ckpt" "$shutdown" "$power" > "$job"
+    scp -q "$job" pc:"$RUNS/job.env"; rm "$job"
+    pc 'powershell -NoProfile -Command "Start-ScheduledTask -TaskName MicroduckTrain"'
+    echo "Started '$name': $iters rounds (~$((iters * 35 / 600)) min). $([ $shutdown = 1 ] && echo 'The PC shuts itself down 5 minutes after it ends.')"
+    echo "Check: pc-train status $name    Collect: pc-train wait $name"
+    ;;
+status) status "${2:-}" ;;
+wait)
+    until pc "type $RUNSW\\$2.status" | grep -q finished; do sleep 30; done
+    status "$2"; fetch "$2"
+    ;;
+fetch) fetch "$2" ;;
+off) pc 'shutdown /s /t 0'; echo "Shutting down." ;;
+*) sed -n '2,12p' "$0"; exit 2 ;;
+esac

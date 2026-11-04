@@ -140,58 +140,51 @@ It installs Windows' own OpenSSH server, limits it to the home network, trusts o
 0.5 m/s, never falls). Full story: [`TRAINING.md`](TRAINING.md) section 12. Results copied to the laptop
 (`~/microduck-runs/pc/`), PC shut down 18:39.
 
-**Lessons from the first run (fix before the next):**
-- **The automatic shutdown didn't happen.** The run script called Windows' `shutdown.exe` from inside Linux; it
-  logged "scheduled", but Windows had nothing pending. Probably not allowed from a background Linux process. Fix:
-  a Windows scheduled task that runs as SYSTEM, triggered at the end of the run. I shut it down by hand this time.
-- **Copying results:** streaming files through SSH out of Linux hung. What worked: pack them onto C:
-  (`/mnt/c/Users/lelan/microduck-runs/`), then `scp pc:C:/Users/lelan/microduck-runs/<file> .`
-- **`rerun-gamer.local` stopped resolving** mid-evening, so `ssh pc` now uses the address **192.168.1.194**. That
-  can change; reserving it in the AT&T gateway (DHCP reservation for `50:eb:f6:ca:72:a1`) would pin it.
-- **WSL stops Linux when nothing is connected,** so a laptop SSH session stays open during a run. To be confirmed.
+**Lessons from the first run, all fixed 2026-11-03 evening:**
+- **WSL stops Linux a few seconds after the last connection closes**, killing anything running (tested: a background
+  heartbeat died within seconds). The first run only survived because the laptop kept a connection open.
+  **Fix:** training is started by a **Windows scheduled task, `MicroduckTrain`** (runs as `lelan`, "whether logged
+  on or not", highest privileges), which keeps Linux alive for the whole run. No laptop connection needed.
+- **The automatic shutdown didn't happen** (asking Windows from inside Linux failed silently). **Fix:** the task's
+  Windows script shuts down from Windows itself: `shutdown /s /t 300`, 5 minutes after the run, enough for the laptop to fetch.
+- **Copying results:** the run is packed into `C:\Users\lelan\microduck-runs\<name>.tgz`, then fetched with `scp`.
+- **Never send `shutdown /a` to "check":** it cancels a pending shutdown.
+- `rerun-gamer.local` stopped resolving, so `ssh pc` uses **192.168.1.194**. If the AT&T gateway ever gives the PC
+  a different address, `ssh pc` breaks. Pin it with a reservation in the gateway (see below).
 
-**How it will work:**
-- **Switched on from the laptop** (Wake-on-LAN, over the wired home network). Needs two settings checked on
-  the PC: one in the BIOS, one on the network adapter.
-- **Every training run ends by shutting the PC down.** No idling, so less heat and fan noise in the office.
-- Optional: **cap the graphics card's power** (about 170 W → 120 W): much quieter and cooler, perhaps
-  10–20% slower.
-- Then `ssh pc` from the laptop, just like the Studio.
+## Training on the PC from the laptop: one command (working 2026-11-03)
 
-**Linux on the PC (WSL2):** Linux runs inside Windows as **one big file**, with no partitioning and no
-choosing Windows or Linux at startup. It goes on the **second drive** (`wsl --install --location D:\WSL\…`),
-grows as needed, and needs about 20–50 GB. Pollen's training doesn't work in plain Windows (Kevin Wood's
-video shows it failing) but does in WSL2.
+```sh
+leland/tools/pc-train start first-4000 4000 --resume first-750 model_749.pt   # wake, train, auto-off
+leland/tools/pc-train status                 # how far it has got
+leland/tools/pc-train wait first-4000        # wait for the end, then copy the result to ~/microduck-runs/pc/
+leland/tools/pc-train wake | off             # switch the PC on or off by hand
+```
 
-**Keeping it from being used as a bot without me knowing:**
-- **Nothing on the internet can reach it.** The AT&T gateway blocks unrequested connections from outside,
-  and no port on the router will ever be opened.
-- **Only my laptop can log in.** Key only, no passwords, and Windows Firewall allows it only from the home network.
-- **No ZeroTier on the PC**, so Keller's network can't reach it.
-- **No remote-control apps** (TeamViewer, AnyDesk…). Windows Update and Defender stay on.
-- **I can check anytime:** Claude can list everything running and every outside connection.
-- **Belt and braces:** the AT&T gateway can block one device's internet (Device Access controls).
+Options: `--keep-on` (don't shut down afterwards), `--power 130` (cap the graphics card at 130 W for less heat and
+noise; set back to 170 W after the run).
 
-**Known from its System Information (2026-11-03):** Windows 11 Home build 26200 (WSL2 works on Home),
-NVIDIA driver 596.36 (Pollen's training needs 580+), **"Virtualization-based security: Running"** = the
-processor's virtualization is already switched on (WSL2 needs it), UEFI + Secure Boot, Windows user `lelan`.
+**How it works:**
 
-**Checked 2026-11-03 (Task Manager + This PC):**
-- **Graphics card memory: 12.0 GB.** (System Information's "1 MB" was the Windows bug.) Driver now
-  32.0.15.9649 = NVIDIA 596.49, dated 2026-05-05.
-- **C: is a fast SSD (NVMe), 124 GB free of 453. D: "DATA" is a spinning hard drive (SATA HDD), 887 GB free
-  of 931.**
-- Decision on where Linux goes: see below.
+1. **Wake:** the laptop sends a Wake-on-LAN "magic packet" (to `50:eb:f6:ca:72:a1`) and waits for SSH.
+2. **Job:** the laptop writes `C:\Users\lelan\microduck-runs\job.env` (name, rounds, resume, shutdown, power).
+3. **Start:** `Start-ScheduledTask MicroduckTrain` runs [`pc/pc-train.ps1`](pc/pc-train.ps1) (Windows side: power
+   limit, start Linux, shutdown), which runs [`pc/pc-run.sh`](pc/pc-run.sh) in Linux (train, pack the result).
+   Log, status and result go to `C:\Users\lelan\microduck-runs\`, so the laptop can check progress without touching Linux.
+4. **Finish:** result packed, power limit restored, **PC shuts itself down 5 minutes later**.
 
-**Where Linux should go: C: (SSD) or D: (hard drive)?** (open, my call)
+**Tested end to end 2026-11-03:** a 10-round job started by the task with nothing connected, power cap
+170 → 130 → 170 W, result fetched, shut itself down at 21:31; later **woken from the laptop**: off 21:47:48, packet
+~21:48:20, Windows up 21:48:43, SSH 21:49:02.
 
-| | Linux on **C:** (SSD) | Linux on **D:** (hard drive) |
-|---|---|---|
-| Space | 124 GB free; Linux takes 20–50 GB | 887 GB free, room for anything |
-| Installing (thousands of small files) | minutes | noticeably slower, maybe 5–10× |
-| Starting a training run | seconds | slower to load |
-| Training itself | same: the graphics card does the work | same |
+**What it took to make remote switch-on work:**
+- BIOS (Delete at the ROG logo, F7 Advanced): **Advanced → APM Configuration → ErP Ready: Disabled, Power On By
+  PCI-E: Enabled.** Before that, the PC ignored wake packets from both the laptop and the wired Studio.
+- Windows: **Fast Startup off** (`HiberbootEnabled = 0`); network card already had Wake on Magic Packet and
+  Shutdown Wake-On-LAN enabled.
+- The network port shows **no lights** when the PC is off, even though wake works. That's normal for this card.
 
-Recommended: **Linux on C:** for speed, and **old runs, videos and archives on D:**, which Linux can
-reach as `/mnt/d`. If C: ever gets tight, the Linux file can move to D: with one command
-(`wsl --manage <name> --move D:\WSL`).
+**Optional: pin the PC's address** (stops `ssh pc` breaking if the address changes). In a browser go to
+`http://192.168.1.254` (the AT&T gateway) → **Home Network → IP Allocation**, find the PC (`50:eb:f6:ca:72:a1`),
+choose **Allocate a fixed IP 192.168.1.194**, and save. It asks for the **Device Access Code** printed on the
+gateway's sticker.

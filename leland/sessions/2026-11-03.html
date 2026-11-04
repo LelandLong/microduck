@@ -168,5 +168,15 @@ session) for most of the work. There&#39;s no &quot;Fable 5.5&quot; as of today.
 <li>Sources: github.com/innate-inc/warp-metal, github.com/DavidDobas/microduck_rl (branch metal),
 github.com/DavidDobas/warp, github.com/lucidrains/mujoco_warp, github.com/RobotFlow-Labs/Mujoco-mlx.</li>
 </ul>
+<h2>Round 8: back home, the PC finished</h2>
+<ul>
+<li>Found why runs depended on the laptop: WSL stops Linux seconds after the last connection closes. Now a Windows
+scheduled task (<code>MicroduckTrain</code>) runs each job, and Windows itself shuts the PC down 5 minutes after.</li>
+<li>New laptop command <code>leland/tools/pc-train</code> (wake / start / status / wait / fetch / off), tested end to end with a
+10-round job and a 130 W power cap.</li>
+<li>Remote switch-on works after one BIOS change I made at the PC (ErP Ready off, Power On By PCI-E on) and Fast Startup
+off. Tested: woken from the laptop in about 55 seconds.</li>
+<li>Optional still: pin the PC&#39;s address in the AT&amp;T gateway.</li>
+</ul>
 
 </div></body></html>

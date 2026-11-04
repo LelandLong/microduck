@@ -63,6 +63,9 @@
   branch + local `mujoco==3.11.0` pin). Studio M4 Max 4.0 s/it (90% of 3060), M1 Pro 13.7 s/it; Studio 750-run (48 min)
   WALKS 0.53/1.32/2.12 m. **First open-source contribution posted: innate-inc/warp-metal#10.** Starred warp-metal +
   DavidDobas/microduck_rl. Next: watch for David's reply; offer branch update PR; fixed-seed like-for-like run.
+- **PC complete 2026-11-03 21:50:** `leland/tools/pc-train` wakes (WoL works after BIOS ErP off + Power On By PCI-E on +
+  Fast Startup off), trains via Windows task `MicroduckTrain` (S4U; WSL dies without a client otherwise), packs to
+  `C:\Users\lelan\microduck-runs`, auto-shutdown from Windows 5 min after. Tested end to end. Details `leland/MACHINES.md`.
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is
