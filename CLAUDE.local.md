@@ -59,6 +59,10 @@
   in the microduck-lab harness. Copied to `~/microduck-runs/pc/` + `leland/policies/pc-first-750.onnx`. Auto-shutdown
   FAILED (shutdown.exe from a nohup'd WSL process); PC shut down by hand 18:39. `ssh pc` → 192.168.1.194 (mDNS flaky).
   **Never send `shutdown /a` to check status**: it cancels a pending shutdown.
+- **Metal project (`leland/METAL.md`):** warp-metal works on both Macs (`~/Pollen/microduck_rl-metal`, DavidDobas `metal`
+  branch + local `mujoco==3.11.0` pin). Studio M4 Max 4.0 s/it (90% of 3060), M1 Pro 13.7 s/it; Studio 750-run (48 min)
+  WALKS 0.53/1.32/2.12 m. **First open-source contribution posted: innate-inc/warp-metal#10.** Starred warp-metal +
+  DavidDobas/microduck_rl. Next: watch for David's reply; offer branch update PR; fixed-seed like-for-like run.
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is

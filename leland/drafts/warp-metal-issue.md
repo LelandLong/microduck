@@ -1,4 +1,6 @@
-# Draft: GitHub issue for DavidDobas/microduck_rl (not posted, waiting for Leland's OK)
+# GitHub issue to David: POSTED as innate-inc/warp-metal#10 (2026-11-03)
+
+https://github.com/innate-inc/warp-metal/issues/10. Posted with Leland's OK. (Issues are off on `DavidDobas/microduck_rl`, so it went to warp-metal; one line in the posted version says so.)
 
 **Where:** https://github.com/DavidDobas/microduck_rl/issues/new (his Microduck `metal` branch).
 **Title:** Microduck on M4 Max: ~90% of an RTX 3060, and it walks (+ a lockfile fix)

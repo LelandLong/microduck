@@ -142,4 +142,6 @@ physics is wrong. That's the most important result so far: **the Apple GPU train
 Not yet checked: the same duck in the full duck simulator (`scripts/duck-sim`), and a like-for-like run (same mjlab
 version, same random seed) to separate "Metal" from "newer mjlab".
 
-**Draft message to David:** [`drafts/warp-metal-issue.md`](drafts/warp-metal-issue.md). Waiting for my OK before posting.
+**Posted 2026-11-03 ~20:20, with my OK: [innate-inc/warp-metal#10](https://github.com/innate-inc/warp-metal/issues/10)**,
+my first open-source contribution. (Issues are off on his `microduck_rl` fork, so it went to warp-metal, with one
+line explaining that.) Text: [`drafts/warp-metal-issue.md`](drafts/warp-metal-issue.md). Watch for his reply.
