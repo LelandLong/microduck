@@ -91,8 +91,9 @@
 ## Working with Leland (house rules from his other projects)
 - Plain English, no jargon. Short bullets first, detail after, and **every substantive reply ends
   with a summary**.
-- He's an experienced Swift/iOS developer and knows Apple tooling well. Rust, robotics and
-  reinforcement learning are new to him here, so teach those properly without talking down.
+- **Background (corrected by Leland 2026-11-04):** mostly **JavaScript** these days; wrote **Objective-C** years ago;
+  knows very little Swift. Explain by comparison to JS (and Obj-C retain/release for memory), not Swift.
+  Rust, robotics and reinforcement learning are new to him here, so teach those properly without talking down.
 - Verify, don't recall: time comes from `date`, and nothing is called working until it has been run.
 - **Never install system-wide software (Homebrew packages, Rust toolchains, Python environments)
   without telling him first** what it is and roughly how big it is.
