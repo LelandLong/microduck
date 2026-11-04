@@ -17,7 +17,8 @@ echo "running since $(date '+%F %T')" > "$status"
 
 args=(Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs "$ENVS" --agent.max-iterations "$ITERATIONS" --agent.run-name "$NAME")
 if [ -n "${RESUME_RUN:-}" ]; then
-    args+=(--agent.resume True --agent.load-run "$RESUME_RUN" --agent.load-checkpoint "${RESUME_CKPT:-model_.*.pt}")
+    # mjlab matches the whole run folder name (e.g. 2026-11-03_17-46-58_first-750), so a short name needs ".*" in front.
+    args+=(--agent.resume True --agent.load-run ".*$RESUME_RUN" --agent.load-checkpoint "${RESUME_CKPT:-model_.*.pt}")
 fi
 uv run train "${args[@]}" > "$log" 2>&1
 rc=$?

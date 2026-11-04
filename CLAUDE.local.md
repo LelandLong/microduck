@@ -66,6 +66,10 @@
 - **PC complete 2026-11-03 21:50:** `leland/tools/pc-train` wakes (WoL works after BIOS ErP off + Power On By PCI-E on +
   Fast Startup off), trains via Windows task `MicroduckTrain` (S4U; WSL dies without a client otherwise), packs to
   `C:\Users\lelan\microduck-runs`, auto-shutdown from Windows 5 min after. Tested end to end. Details `leland/MACHINES.md`.
+- **Overnight 2026-11-03 → 04 (Leland approved the phased plan):** PC `walk-4000` = resume first-750 → 3999 (`pc-train start walk-4000 3250
+  --resume first-750 model_749.pt --power 130`; mjlab counts resume iterations as EXTRA, and `load-run` must match the whole
+  folder name, so pc-run.sh prefixes `.*`), ETA ~01:40, auto-off. Studio `standup-750` (Mjlab-StandUp-Flat-MicroDuck, Metal,
+  background; osascript Terminal failed -10810 = screen locked). Tomorrow: report cards (walk test, video, duck-sim).
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is
