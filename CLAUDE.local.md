@@ -70,6 +70,11 @@
   --resume first-750 model_749.pt --power 130`; mjlab counts resume iterations as EXTRA, and `load-run` must match the whole
   folder name, so pc-run.sh prefixes `.*`), ETA ~01:40, auto-off. Studio `standup-750` (Mjlab-StandUp-Flat-MicroDuck, Metal,
   background; osascript Terminal failed -10810 = screen locked). Tomorrow: report cards (walk test, video, duck-sim).
+- **2026-11-04 morning report cards done (TRAINING.md §13):** `walk-4000` walks STRAIGHT (first-750 curved ~70°),
+  runs in full `duck-sim`/robotd (swap via a temporary `policies/` dir beside the repo, which duck-sim prefers).
+  **Metal branch bug found:** mjlab 1.6 + unnamed geoms → only feet touch the floor in ground-contact tasks, so the
+  Studio StandUp brain is INVALID (walking unaffected). Draft for David `leland/drafts/warp-metal-comment-2.md`, NOT
+  posted (needs Leland's OK). Scripts `leland/tools/report-card/` (StandUp tests run on the Studio, device "cpu").
 - Leland left the house 2026-11-03 evening; laptop + PC left on (laptop kept awake with `caffeinate` for 12 h).
 - **A Claude Cloud session can't reach the Studio or the PC** (they're on the home network; the cloud isn't).
   For hands-on work from the iPhone, use **Remote Control** of the laptop session instead. A cloud session is

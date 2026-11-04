@@ -73,5 +73,23 @@ to 170 W after). The laptop fetched it automatically; the PC scheduled its own s
 slowest speed is about the same. Neither fell. Still short of the ideal: the harness is a different simulator from
 training&#39;s, so some gap is expected. Video and the full duck simulator come with the morning report card.</li>
 </ul>
+<h2>09:00–09:40: morning report cards (Leland: &quot;its morning. do it&quot;)</h2>
+<p>Full write-up: <a href="../TRAINING.html">TRAINING.md §13</a>. The short version:</p>
+<ul>
+<li><strong>Walking video</strong> made: <a href="../media/walk-750-vs-4000.mp4"><code>media/walk-750-vs-4000.mp4</code></a> (750 / 4,000 / Pollen&#39;s, at
+0.3 and 0.5 m/s).</li>
+<li><strong>New finding:</strong> the 750-round duck <strong>curves</strong> about 70° off course in 8 s; the <strong>4,000-round duck walks
+straight</strong>. The first test only measured forward distance, so it missed this.</li>
+<li><strong>Full duck simulator</strong> with the 4,000-round brain: it works in the real <code>robotd</code>. 1.38 m and 2.68 m in about 8 s
+at 0.3 and 0.5 m/s, against Pollen&#39;s 0.94 m and 1.55 m. Pollen&#39;s walker has more skills; mine is only faster in a
+straight line.</li>
+<li><strong>Stand-up (Metal):</strong> 72% of 64 sitting ducks get up, but only about half from a deep sit. <strong>And it&#39;s invalid:</strong> in
+the Metal branch only the feet touch the floor (mjlab 1.6 + unnamed geoms), so the duck trained in a world where
+its body falls through the ground. Walking is unaffected. Details in <a href="../METAL.html">METAL.md</a>.</li>
+<li>A draft comment for David (<a href="../drafts/warp-metal-comment-2.html"><code>drafts/warp-metal-comment-2.md</code></a>): <strong>not posted,
+needs Leland&#39;s OK.</strong></li>
+<li>Scripts written, now in <a href="../tools/report-card/"><code>tools/report-card/</code></a>: <code>standup_test.py</code>, <code>standup_film.py</code>, <code>contacts.py</code>, <code>walk_video.py</code>,
+<code>probe_walk2.py</code> (adds sideways drift and heading).</li>
+</ul>
 
 </div></body></html>

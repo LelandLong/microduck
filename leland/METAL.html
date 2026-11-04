@@ -252,5 +252,41 @@ version, same random seed) to separate &quot;Metal&quot; from &quot;newer mjlab&
 <p><strong>Posted 2026-11-03 ~20:20, with my OK: <a href="https://github.com/innate-inc/warp-metal/issues/10">innate-inc/warp-metal#10</a></strong>,
 my first open-source contribution. (Issues are off on his <code>microduck_rl</code> fork, so it went to warp-metal, with one
 line explaining that.) Text: <a href="drafts/warp-metal-issue.html"><code>drafts/warp-metal-issue.md</code></a>. Watch for his reply.</p>
+<h3>2026-11-04: found a bug: stand-up ducks fall through the floor</h3>
+<p>Trained <code>Mjlab-StandUp-Flat-MicroDuck</code> for 750 rounds on the Studio overnight (48 min 42 s). In the report-card
+video (<a href="TRAINING.html">TRAINING.md §13</a>), the ducks that failed had <strong>sunk through the floor</strong>. I listed which robot
+parts can touch the floor in the compiled model:</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Pollen&#39;s original (mjlab 1.3)</th>
+<th>Metal branch (mjlab 1.6)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Walking (<code>robot_walk.xml</code>)</td>
+<td>the 2 feet</td>
+<td>the 2 feet ✅ same</td>
+</tr>
+<tr>
+<td>Stand-up (<code>robot_groundcontact.xml</code>)</td>
+<td><strong>10 parts</strong>: trunk, hips, legs, jaw, feet</td>
+<td><strong>only the 2 feet</strong> ❌</td>
+</tr>
+</tbody></table>
+<p><strong>Cause:</strong> in the ground-contact model, the body-contact geoms have <strong>no names</strong>. Both versions apply
+<code>FULL_COLLISION</code> (pattern <code>.*_collision</code>) with <code>disable_other_geoms=True</code>. <strong>mjlab 1.3</strong> disabled the others <em>by
+name</em> (<code>spec.geom(name)</code>), so unnamed geoms slipped through and kept their contact, by accident. <strong>mjlab 1.6</strong> loops
+over the geom objects themselves, so it correctly switches off every unmatched geom, unnamed ones included. David&#39;s
+<code>contype=1, conaffinity=1</code> change only covers the matched (named) geoms.</p>
+<p><strong>Affects</strong> every task that uses the ground-contact models: stand-up, sit-stand, ground pick, roulade, rollers.
+<strong>Doesn&#39;t affect</strong> walking (velocity), so the Studio walking result stands. <strong>Pollen hits it too</strong> the day they move
+to mjlab ≥ 1.4.</p>
+<p><strong>Possible fixes</strong> (David&#39;s or Pollen&#39;s call): give the ground-contact geoms names that match the rule (e.g.
+<code>trunk_collision</code>), or set <code>disable_other_geoms=False</code> on the ground-contact robot&#39;s <code>CollisionCfg</code>. Either way,
+check it with the same parts list.</p>
+<p>Draft comment for warp-metal#10: <a href="drafts/warp-metal-comment-2.html"><code>drafts/warp-metal-comment-2.md</code></a>. <strong>Not posted:
+waiting for my OK.</strong></p>
 
 </div></body></html>

@@ -292,6 +292,80 @@ as Pollen's: 61 numbers in, 14 motor commands out. Checkpoints (rounds 0, 250, 5
 `~/microduck-runs/pc/`, and on the PC in `~/microduck_rl/logs/rsl_rl/`. **Training to 4,000 rounds continues from
 round 749; it doesn't start over.**
 
+## 13. Report card, 2026-11-04: the overnight runs
+
+Three checks on what trained overnight. Every number below was measured, not read off a training log.
+
+### Walking: 750 rounds against 4,000 rounds
+
+![Walking comparison: 750 rounds, 4,000 rounds and Pollen's walker, at 0.3 and 0.5 m/s](media/walk-750-vs-4000.png)
+
+Video: [`media/walk-750-vs-4000.mp4`](media/walk-750-vs-4000.mp4) (8 s, top row 0.3 m/s, bottom row 0.5 m/s).
+
+**Test 1, microduck-lab's simulator** (8 s, told to walk straight ahead):
+
+| Speed asked for | Duck | Forward | Sideways | Facing at the end |
+|---|---|---|---|---|
+| 0.3 m/s (ideal 2.4 m) | 750 rounds | 1.16 m | −1.24 m | turned 72° |
+| | **4,000 rounds** | **1.77 m** | 0.08 m | **1°** |
+| | Pollen's walker | 1.06 m | 0.00 m | 5° |
+| 0.5 m/s (ideal 4.0 m) | 750 rounds | 2.46 m | −2.01 m | turned 67° |
+| | **4,000 rounds** | **2.97 m** | 0.17 m | 19° |
+| | Pollen's walker | 1.70 m | −0.63 m | 28° |
+
+- **The big improvement is walking straight.** The 750-round duck walks fast but curves right: about 70° off course
+  and 2 m sideways in 8 s. That was hidden before, because the first test only measured forward distance.
+- The 4,000-round duck holds its line and covers more ground than either of the others.
+
+**Test 2, the full duck simulator** (`scripts/duck-sim`: the real `robotd`, the same 50 Hz loop as the robot).
+The walking brain was swapped for one run, and the log confirmed which file was loaded. Ground covered in about 8 s
+of `drive`:
+
+| Speed asked for | **4,000 rounds** | Pollen's walker |
+|---|---|---|
+| 0.3 m/s | **1.38 m** | 0.94 m |
+| 0.5 m/s | **2.68 m** | 1.55 m |
+
+- **It works in the real daemon stack.** Pollen's sit-to-stand brain got it up, then my brain took over, stood and
+  walked, with nothing falling over or complaining.
+- **This doesn't make mine "better" than Pollen's.** Theirs (version 8) has also been trained to steer, turn on the
+  spot, tilt its body on command and get up gracefully from a fall, and it may simply be tuned to walk slower. Mine
+  has only learnt the basic task. Those extra skills are what a later, longer run has to add before mine could
+  replace theirs.
+
+### Stand-up (trained on the Studio's Apple GPU)
+
+![The same two sitting ducks before training, after 250 rounds, and after 750 rounds](media/standup-750-metal.png)
+
+Video: [`media/standup-750-metal.mp4`](media/standup-750-metal.mp4). These are the first two deep-sitting ducks of a
+fixed set, not picked for looking good.
+
+Test: 64 ducks start sitting, and each gets 6 s. "Up" means trunk higher than 10.5 cm (standing is 11.5 cm).
+
+| Brain | All 64 | From a deep sit | From half up | From nearly standing |
+|---|---|---|---|---|
+| Before training | 0% | | | |
+| 250 rounds | 62% | 11 of 29 | 6 of 12 | 23 of 23 |
+| 500 rounds | 78% | 14 of 25 | 9 of 12 | 27 of 27 |
+| 750 rounds | 72% | 12 of 22 | 8 of 16 | 26 of 26 |
+
+**⚠️ Don't trust this brain: the Mac's world had a bug.** In the frames, the ducks that failed had **sunk through the
+floor**. I checked which body parts can touch the floor:
+
+- **Pollen's original:** 10 parts (trunk, hips, legs, jaw, feet).
+- **The Metal version:** **only the two feet.**
+
+So my Studio duck practised getting up in a world where its bottom falls through the ground, which is useless for the
+real duck. **Walking isn't affected:** in both versions only the feet touch the floor in the walking task, so the
+Studio walking result (METAL.md) stands.
+
+The cause is in the newer mjlab that the Metal branch moved to (1.6, against Pollen's 1.3). It switches off floor
+contact for every body part that isn't named in the collision rule, and the stand-up model's body parts have no
+names. mjlab 1.3 only switched them off by name, so unnamed parts kept their contact by accident. Details and the
+note for David are in [METAL.md](METAL.md). **Pollen will hit the same thing when they upgrade mjlab.**
+
+**What next for stand-up:** train it on the PC (Pollen's original, correct floor), or fix the Metal branch and retrain.
+
 ## Glossary
 
 | Word | Meaning |

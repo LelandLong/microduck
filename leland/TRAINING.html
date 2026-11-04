@@ -444,6 +444,158 @@ standing still a losing strategy, plus 130× more ducks practising. Section 8 in
 as Pollen&#39;s: 61 numbers in, 14 motor commands out. Checkpoints (rounds 0, 250, 500, 749) are on the laptop in
 <code>~/microduck-runs/pc/</code>, and on the PC in <code>~/microduck_rl/logs/rsl_rl/</code>. <strong>Training to 4,000 rounds continues from
 round 749; it doesn&#39;t start over.</strong></p>
+<h2>13. Report card, 2026-11-04: the overnight runs</h2>
+<p>Three checks on what trained overnight. Every number below was measured, not read off a training log.</p>
+<h3>Walking: 750 rounds against 4,000 rounds</h3>
+<p><img src="media/walk-750-vs-4000.png" alt="Walking comparison: 750 rounds, 4,000 rounds and Pollen&#39;s walker, at 0.3 and 0.5 m/s"></p>
+<p>Video: <a href="media/walk-750-vs-4000.mp4"><code>media/walk-750-vs-4000.mp4</code></a> (8 s, top row 0.3 m/s, bottom row 0.5 m/s).</p>
+<p><strong>Test 1, microduck-lab&#39;s simulator</strong> (8 s, told to walk straight ahead):</p>
+<table>
+<thead>
+<tr>
+<th>Speed asked for</th>
+<th>Duck</th>
+<th>Forward</th>
+<th>Sideways</th>
+<th>Facing at the end</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.3 m/s (ideal 2.4 m)</td>
+<td>750 rounds</td>
+<td>1.16 m</td>
+<td>−1.24 m</td>
+<td>turned 72°</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>4,000 rounds</strong></td>
+<td><strong>1.77 m</strong></td>
+<td>0.08 m</td>
+<td><strong>1°</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>Pollen&#39;s walker</td>
+<td>1.06 m</td>
+<td>0.00 m</td>
+<td>5°</td>
+</tr>
+<tr>
+<td>0.5 m/s (ideal 4.0 m)</td>
+<td>750 rounds</td>
+<td>2.46 m</td>
+<td>−2.01 m</td>
+<td>turned 67°</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>4,000 rounds</strong></td>
+<td><strong>2.97 m</strong></td>
+<td>0.17 m</td>
+<td>19°</td>
+</tr>
+<tr>
+<td></td>
+<td>Pollen&#39;s walker</td>
+<td>1.70 m</td>
+<td>−0.63 m</td>
+<td>28°</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>The big improvement is walking straight.</strong> The 750-round duck walks fast but curves right: about 70° off course
+and 2 m sideways in 8 s. That was hidden before, because the first test only measured forward distance.</li>
+<li>The 4,000-round duck holds its line and covers more ground than either of the others.</li>
+</ul>
+<p><strong>Test 2, the full duck simulator</strong> (<code>scripts/duck-sim</code>: the real <code>robotd</code>, the same 50 Hz loop as the robot).
+The walking brain was swapped for one run, and the log confirmed which file was loaded. Ground covered in about 8 s
+of <code>drive</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Speed asked for</th>
+<th><strong>4,000 rounds</strong></th>
+<th>Pollen&#39;s walker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.3 m/s</td>
+<td><strong>1.38 m</strong></td>
+<td>0.94 m</td>
+</tr>
+<tr>
+<td>0.5 m/s</td>
+<td><strong>2.68 m</strong></td>
+<td>1.55 m</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>It works in the real daemon stack.</strong> Pollen&#39;s sit-to-stand brain got it up, then my brain took over, stood and
+walked, with nothing falling over or complaining.</li>
+<li><strong>This doesn&#39;t make mine &quot;better&quot; than Pollen&#39;s.</strong> Theirs (version 8) has also been trained to steer, turn on the
+spot, tilt its body on command and get up gracefully from a fall, and it may simply be tuned to walk slower. Mine
+has only learnt the basic task. Those extra skills are what a later, longer run has to add before mine could
+replace theirs.</li>
+</ul>
+<h3>Stand-up (trained on the Studio&#39;s Apple GPU)</h3>
+<p><img src="media/standup-750-metal.png" alt="The same two sitting ducks before training, after 250 rounds, and after 750 rounds"></p>
+<p>Video: <a href="media/standup-750-metal.mp4"><code>media/standup-750-metal.mp4</code></a>. These are the first two deep-sitting ducks of a
+fixed set, not picked for looking good.</p>
+<p>Test: 64 ducks start sitting, and each gets 6 s. &quot;Up&quot; means trunk higher than 10.5 cm (standing is 11.5 cm).</p>
+<table>
+<thead>
+<tr>
+<th>Brain</th>
+<th>All 64</th>
+<th>From a deep sit</th>
+<th>From half up</th>
+<th>From nearly standing</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Before training</td>
+<td>0%</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>250 rounds</td>
+<td>62%</td>
+<td>11 of 29</td>
+<td>6 of 12</td>
+<td>23 of 23</td>
+</tr>
+<tr>
+<td>500 rounds</td>
+<td>78%</td>
+<td>14 of 25</td>
+<td>9 of 12</td>
+<td>27 of 27</td>
+</tr>
+<tr>
+<td>750 rounds</td>
+<td>72%</td>
+<td>12 of 22</td>
+<td>8 of 16</td>
+<td>26 of 26</td>
+</tr>
+</tbody></table>
+<p><strong>⚠️ Don&#39;t trust this brain: the Mac&#39;s world had a bug.</strong> In the frames, the ducks that failed had <strong>sunk through the
+floor</strong>. I checked which body parts can touch the floor:</p>
+<ul>
+<li><strong>Pollen&#39;s original:</strong> 10 parts (trunk, hips, legs, jaw, feet).</li>
+<li><strong>The Metal version:</strong> <strong>only the two feet.</strong></li>
+</ul>
+<p>So my Studio duck practised getting up in a world where its bottom falls through the ground, which is useless for the
+real duck. <strong>Walking isn&#39;t affected:</strong> in both versions only the feet touch the floor in the walking task, so the
+Studio walking result (METAL.md) stands.</p>
+<p>The cause is in the newer mjlab that the Metal branch moved to (1.6, against Pollen&#39;s 1.3). It switches off floor
+contact for every body part that isn&#39;t named in the collision rule, and the stand-up model&#39;s body parts have no
+names. mjlab 1.3 only switched them off by name, so unnamed parts kept their contact by accident. Details and the
+note for David are in <a href="METAL.html">METAL.md</a>. <strong>Pollen will hit the same thing when they upgrade mjlab.</strong></p>
+<p><strong>What next for stand-up:</strong> train it on the PC (Pollen&#39;s original, correct floor), or fix the Metal branch and retrain.</p>
 <h2>Glossary</h2>
 <table>
 <thead>

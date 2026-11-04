@@ -145,3 +145,31 @@ version, same random seed) to separate "Metal" from "newer mjlab".
 **Posted 2026-11-03 ~20:20, with my OK: [innate-inc/warp-metal#10](https://github.com/innate-inc/warp-metal/issues/10)**,
 my first open-source contribution. (Issues are off on his `microduck_rl` fork, so it went to warp-metal, with one
 line explaining that.) Text: [`drafts/warp-metal-issue.md`](drafts/warp-metal-issue.md). Watch for his reply.
+
+### 2026-11-04: found a bug: stand-up ducks fall through the floor
+
+Trained `Mjlab-StandUp-Flat-MicroDuck` for 750 rounds on the Studio overnight (48 min 42 s). In the report-card
+video ([TRAINING.md §13](TRAINING.md)), the ducks that failed had **sunk through the floor**. I listed which robot
+parts can touch the floor in the compiled model:
+
+| Task | Pollen's original (mjlab 1.3) | Metal branch (mjlab 1.6) |
+|---|---|---|
+| Walking (`robot_walk.xml`) | the 2 feet | the 2 feet ✅ same |
+| Stand-up (`robot_groundcontact.xml`) | **10 parts**: trunk, hips, legs, jaw, feet | **only the 2 feet** ❌ |
+
+**Cause:** in the ground-contact model, the body-contact geoms have **no names**. Both versions apply
+`FULL_COLLISION` (pattern `.*_collision`) with `disable_other_geoms=True`. **mjlab 1.3** disabled the others *by
+name* (`spec.geom(name)`), so unnamed geoms slipped through and kept their contact, by accident. **mjlab 1.6** loops
+over the geom objects themselves, so it correctly switches off every unmatched geom, unnamed ones included. David's
+`contype=1, conaffinity=1` change only covers the matched (named) geoms.
+
+**Affects** every task that uses the ground-contact models: stand-up, sit-stand, ground pick, roulade, rollers.
+**Doesn't affect** walking (velocity), so the Studio walking result stands. **Pollen hits it too** the day they move
+to mjlab ≥ 1.4.
+
+**Possible fixes** (David's or Pollen's call): give the ground-contact geoms names that match the rule (e.g.
+`trunk_collision`), or set `disable_other_geoms=False` on the ground-contact robot's `CollisionCfg`. Either way,
+check it with the same parts list.
+
+Draft comment for warp-metal#10: [`drafts/warp-metal-comment-2.md`](drafts/warp-metal-comment-2.md). **Not posted:
+waiting for my OK.**
