@@ -206,5 +206,15 @@ other skills one by one, short run first, long run only if it&#39;s learning; (4
 latest code with the Backlash (real-gear) variants; on the real duck, official policies first, then ours one at a
 time with the duck held.</li>
 </ul>
+<h2>Round 11 (23:10): overnight runs, first results</h2>
+<ul>
+<li><strong>Studio <code>standup-750</code> finished</strong> (Mjlab-StandUp-Flat-MicroDuck, Apple GPU, 48 min 42 s, ~3.8 s/round). Copied to
+<code>~/microduck-runs/studio/</code>; brain at <code>policies/studio-standup-750.onnx</code>.</li>
+<li>Episode length is always the full 300 steps here (a stand-up attempt doesn&#39;t end when the duck is on the ground), so
+<strong>the score is the only training signal</strong>: round 0 → −0.0, 50 → −6.8, 150 → 15.3, 300 → 24.1, 500 → 37.3, 749 → 27.4.
+It learned something; the dip at the end means <strong>&quot;does it actually stand up&quot; waits for tomorrow&#39;s measured test</strong>.</li>
+<li><strong>PC <code>walk-4000</code></strong> at round 1818/3999 at 23:09, ETA ~01:16, then switches itself off. The low &quot;time up&quot; right after
+resuming (36.6) was only the statistics warming up: it&#39;s back to 939 (of a 1,000-step maximum).</li>
+</ul>
 
 </div></body></html>
