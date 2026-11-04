@@ -178,5 +178,18 @@ scheduled task (<code>MicroduckTrain</code>) runs each job, and Windows itself s
 off. Tested: woken from the laptop in about 55 seconds.</li>
 <li>Optional still: pin the PC&#39;s address in the AT&amp;T gateway.</li>
 </ul>
+<h2>Round 9: &quot;the duck already walks, so why train walking?&quot;</h2>
+<ul>
+<li>Yes, it&#39;s the <strong>&quot;hello world&quot;</strong>: a skill with a known good answer (Pollen&#39;s <code>alpha_walking</code>), so it proves the whole
+pipeline (PC, Studio, Metal, our tools, the walking test) before spending hours on something new.</li>
+<li>Other reasons to train walking anyway: a custom gait or style, more robustness (rough ground, slopes, pushes), my own
+unit&#39;s servos once it arrives, and learning the craft. New skills often build on it, too.</li>
+<li><strong>What else Pollen&#39;s repo can train</strong> (task names in <code>microduck_rl</code>): standing up (<code>StandUp</code>), sit/stand
+(<code>SitStand</code>), forward roll (<code>Roulade</code>), spin (<code>Spin</code>), ball kick (<code>BallKick</code>), picking up from the ground
+(<code>GroundPick</code>), roller-skate skills (<code>RollerCrouch</code>, <code>RollerSlope</code>, <code>RollerStandUp</code>), stand at speed (<code>VelStand</code>),
+plus <strong>Rough</strong> (uneven ground) and <strong>Backlash</strong> (models the gears&#39; play, closer to the real robot) variants.</li>
+<li>Official policies shipped with the duck (<code>~/.cache/duck-sim/policies</code>): alpha_walking, alpha_stand,
+alpha_sitstand, alpha_ground_pick, ball_kick_left/right, roller, roller_crouch, roulade, velstand.</li>
+</ul>
 
 </div></body></html>
