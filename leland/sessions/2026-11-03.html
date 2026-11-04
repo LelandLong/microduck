@@ -147,5 +147,26 @@ project, not a need. A small first experiment: try MJX + <code>jax-metal</code> 
 </ul>
 </li>
 </ul>
+<h2>Round 7: &quot;you do the work, I&#39;d be the open-source contributor&quot;: does that change things?</h2>
+<ul>
+<li>Searched first: <strong>someone has already started.</strong> David Dobas / innate-inc built <strong><code>warp-metal</code></strong> (Apache-2.0,
+Sept 2026): it adds an Apple GPU (<code>metal:0</code>) to NVIDIA&#39;s Warp. With two small patches to MuJoCo Warp and mjlab
+(open PRs on his forks) it runs mjlab, and <strong>his fork <code>DavidDobas/microduck_rl</code>, branch <code>metal</code>, trains the
+Microduck on a Mac</strong> (8 commits, 4 files changed, last 2026-09-20; it&#39;s 30 commits behind Pollen&#39;s <code>develop</code>).
+Training uses PyTorch on Apple&#39;s GPU (<code>MJLAB_AGENT_DEVICE=mps</code>).</li>
+<li>His benchmark: Unitree G1, 1,024 environments, about <strong>1.0 s per iteration on an M5 Pro vs 0.3 s on an RTX 5090</strong>, with
+the gap widening as environments increase (Apple GPU threadgroup memory). Limits: no float64, some atomics are
+not truly atomic, Apple&#39;s compiler may miscompile big unrolled matrix maths.</li>
+<li>Barely noticed so far (1 star, 0 forks). Other attempts: MJX on <code>jax-metal</code> (broken: <code>mhlo.reduce</code>), two
+MLX ports (narrow feature sets).</li>
+<li><strong>What changes:</strong> my first contribution can be <em>joining</em> this rather than starting from zero. Run it on the
+Studio, measure M4 Max vs RTX 3060 on the Microduck, check the walking result, bring the branch up to date
+with Pollen, report findings upstream, help get the patches merged. Claude does the work; I&#39;m the maintainer
+and decide.</li>
+<li>Model choice: Claude Fable 5.1 (most capable) for the hard GPU-kernel design and debugging; Claude Opus 5.5 (this
+session) for most of the work. There&#39;s no &quot;Fable 5.5&quot; as of today.</li>
+<li>Sources: github.com/innate-inc/warp-metal, github.com/DavidDobas/microduck_rl (branch metal),
+github.com/DavidDobas/warp, github.com/lucidrains/mujoco_warp, github.com/RobotFlow-Labs/Mujoco-mlx.</li>
+</ul>
 
 </div></body></html>
