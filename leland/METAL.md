@@ -89,3 +89,19 @@ everyone) that people value it. It costs nothing and is the friendliest first co
   (laptop). `warp_metal.status()` → active. PyTorch MPS available. `.venv` 1.1 GB.
 - Test command (same as the PC's, plus the Mac device):
   `MJLAB_AGENT_DEVICE=mps WANDB_MODE=disabled uv run train Mjlab-Velocity-Flat-MicroDuck --env.scene.num-envs 4096 --agent.max-iterations 50`
+
+### 2026-11-03 19:15: first test, Studio vs PC
+
+Same 50-round test as the PC (4,096 ducks, Microduck flat-ground walking task):
+
+| Machine | Software | Seconds per learning round | Ducks' average time up at round ~50 |
+|---|---|---|---|
+| Gaming PC, RTX 3060 | Pollen's original (mjlab 1.3, CUDA) | 3.66 (test), 3.36 (750-round run) | 2.7 s |
+| **Mac Studio, M4 Max GPU** | **warp-metal** (mjlab 1.6, Metal) | **3.86–4.05, median 4.01** | **2.6 s** |
+
+**The Studio's Apple GPU trains the Microduck at about 90% of the RTX 3060's speed**, and learning looks the same so
+far. Caveat: different mjlab versions (1.3 vs 1.6), so it's close but not perfectly like-for-like.
+Whole 50-round test: 5 min 9 s including start-up.
+
+**Next (running):** 750 rounds on the Studio (`--agent.run-name metal-750`, started 19:21, log `~/metal-750.log`),
+then the walking test, compared with the PC duck. And the same 50-round test on the laptop's M1 Pro.
