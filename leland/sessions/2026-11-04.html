@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026-11-04</title>
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1117;color:#e6edf3;
+       font:17px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .wrap{max-width:1600px;margin:0 auto;padding:48px 80px 160px}
+  h1{font-size:2.6em;margin:.2em 0 .4em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h2{font-size:1.9em;margin:2.4em 0 .6em;border-bottom:1px solid #30363d;padding-bottom:.3em}
+  h3{font-size:1.3em;color:#adbac7;margin:1.4em 0 .4em}
+  p,li{font-size:1.02em}
+  blockquote{border-left:4px solid #2ea043;background:#11261b;margin:1.2em 0;
+             padding:.9em 1.3em;border-radius:8px;color:#c9d1d9}
+  table{border-collapse:collapse;width:100%;margin:1.2em 0}
+  @media (max-width:760px){.wrap{padding:24px 16px 80px} table{display:block;overflow-x:auto} h1{font-size:1.9em} h2{font-size:1.45em}}
+  th,td{border:1px solid #30363d;padding:11px 16px;text-align:left}
+  th{background:#161b22}
+  code{background:#161b22;padding:.15em .45em;border-radius:5px;font-size:.92em}
+  pre code{display:block;padding:1em;overflow:auto}
+  a{color:#539bf5;text-decoration:none} a:hover{text-decoration:underline}
+  hr{border:0;border-top:1px solid #30363d;margin:2.6em 0}
+  .mermaid{background:#0d1117;text-align:center;margin:1.8em 0}
+  .mermaid svg{max-width:100%;height:auto}
+  img,video{max-width:100%;border-radius:8px}
+  .md-banner{position:fixed;top:0;right:0;background:#21262d;color:#8b949e;
+             padding:6px 12px;font-size:.8em;border-bottom-left-radius:6px;
+             border:1px solid #30363d;border-top:0;border-right:0;z-index:99}
+  .md-banner a{color:#539bf5}
+</style></head><body>
+<div class="md-banner">auto-generated from <a href="2026-11-04.md">2026-11-04.md</a></div>
+<div class="wrap" id="content">
+<h1>2026-11-04</h1>
+<h2>01:20: PC <code>walk-4000</code> finished and walks better</h2>
+<ul>
+<li>Resumed from first-750 at 22:06, <strong>finished 01:17:43</strong> (rounds 750 → 3999, ~3 h 12 min, GPU capped at 130 W, restored
+to 170 W after). The laptop fetched it automatically; the PC scheduled its own shutdown for 01:22:43.</li>
+<li>Brain: <a href="../policies/pc-walk-4000.onnx"><code>policies/pc-walk-4000.onnx</code></a>. Time up at the end: 949 of 1,000 steps.</li>
+<li><strong>Walking test</strong> (microduck-lab harness, 8 s, walk forward; &quot;asked for&quot; = speed × 8 s):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Speed asked for</th>
+<th>Ideal distance</th>
+<th>first-750</th>
+<th><strong>walk-4000</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0.15 m/s</td>
+<td>1.20 m</td>
+<td>0.78 m</td>
+<td>0.67 m</td>
+</tr>
+<tr>
+<td>0.30 m/s</td>
+<td>2.40 m</td>
+<td>1.16 m</td>
+<td><strong>1.77 m</strong></td>
+</tr>
+<tr>
+<td>0.50 m/s</td>
+<td>4.00 m</td>
+<td>2.46 m</td>
+<td><strong>2.97 m</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>4,000 rounds walks noticeably faster at normal and brisk speeds</strong> (+53% and +21%), nearer what&#39;s asked for; the
+slowest speed is about the same. Neither fell. Still short of the ideal: the harness is a different simulator from
+training&#39;s, so some gap is expected. Video and the full duck simulator come with the morning report card.</li>
+</ul>
+
+</div></body></html>
